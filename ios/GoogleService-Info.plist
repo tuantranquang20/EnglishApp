@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>356235006010-g7oj898q6loenjri1ncqd0g5i9gfva57.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.356235006010-g7oj898q6loenjri1ncqd0g5i9gfva57</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCO8Ypnp7DM1dR8fkMtP6l5ytMZ23X8bYw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>356235006010</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.reactjs.native.example.EnglishApp</string>
+	<key>PROJECT_ID</key>
+	<string>englishapp-7189c</string>
+	<key>STORAGE_BUCKET</key>
+	<string>englishapp-7189c.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:356235006010:ios:7dfde50eea145cfc5d2503</string>
+	<key>DATABASE_URL</key>
+	<string>https://englishapp-7189c-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>
