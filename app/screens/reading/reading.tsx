@@ -4,39 +4,51 @@ import FlipCard from "~app/components/flip-card/flip-card"
 import ReanimatedCarousel from "~app/components/reanimated-carousel"
 import Tts from "react-native-tts"
 import { Button } from "~app/components"
+import { BackCard } from "./components/back-card"
+import { FrontCard } from "./components/front-card"
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window")
 
 const data = [
   {
     word: "Apple",
+    translateWord: "Quả Táo",
   },
   {
     word: "Orange",
+    translateWord: "Quả Cam",
   },
   {
     word: "Banana",
+    translateWord: "Quả Chuối",
   },
   {
     word: "Grape",
+    translateWord: "Quả Nho",
   },
   {
     word: "Grapefruit",
+    translateWord: "Quả Bưởi",
   },
   {
     word: "Starfruit",
+    translateWord: "Quả Khế",
   },
   {
     word: "Mango",
+    translateWord: "Quả Xoài",
   },
   {
     word: "Lemon",
+    translateWord: "Quả Chanh",
   },
   {
     word: "Cherry",
+    translateWord: "Quả Anh Đào",
   },
   {
     word: "Berry",
+    translateWord: "Quả Dâu",
   },
 ]
 
@@ -62,26 +74,11 @@ export function ReadingScreen() {
     Tts.getInitStatus().then(initTts)
   }, [])
 
-  const readText = (text = "") => async () => {
+  const readText = async (text = "") => {
     Tts.stop()
     Tts.speak(text)
   }
-  const renderFront = () => {
-    return (
-      <View style={styles.frontStyle}>
-        <Text style={{ fontSize: 25, color: "#fff" }}>{"Front"}</Text>
-      </View>
-    )
-  }
 
-  const renderBack = (item) => {
-    return (
-      <View style={styles.backStyle}>
-        <Text style={{ fontSize: 25, color: "#fff" }}>{item.word}</Text>
-        <Button text="Speak" onPress={readText(item.word)} />
-      </View>
-    )
-  }
   const renderItem = ({ item }) => {
     const viewRef = useRef()
     return (
@@ -92,8 +89,8 @@ export function ReadingScreen() {
           width={300}
           height={500}
         >
-          {renderBack(item)}
-          {renderFront()}
+          <BackCard item={item} handleSpeak={readText} />
+          <FrontCard item={item} handleSpeak={readText} />
           <View></View>
         </FlipCard>
         <TouchableOpacity onPress={() => viewRef.current.flipLeft()}>
@@ -120,6 +117,7 @@ export function ReadingScreen() {
         }}
         height={500}
         mode="horizontal-stack"
+        customConfig={() => ({ type: "positive" })}
         scrollAnimationDuration={1000}
         renderItem={renderItem}
       />
@@ -129,26 +127,18 @@ export function ReadingScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "white",
-    justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "white",
+    flex: 1,
+    justifyContent: "center",
     paddingTop: 50,
   },
   frontStyle: {
-    width: 300,
-    height: 500,
+    alignItems: "center",
     backgroundColor: "#f00",
-    justifyContent: "center",
-    alignItems: "center",
     borderRadius: 20,
-  },
-  backStyle: {
-    width: 300,
     height: 500,
-    backgroundColor: "#f0f",
     justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 20,
+    width: 300,
   },
 })
