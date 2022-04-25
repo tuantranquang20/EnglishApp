@@ -20,6 +20,8 @@ target 'EnglishApp' do
 
   pod 'react-native-voice', :path => '../node_modules/@react-native-community/voice'
 
+  pod 'TextToSpeech', :path => '../node_modules/react-native-tts'
+
   target 'EnglishAppTests' do
     inherit! :complete
     # Pods for testing

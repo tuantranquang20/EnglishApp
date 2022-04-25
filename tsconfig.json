@@ -14,8 +14,34 @@
     "target": "esnext",
     "lib": ["esnext", "dom"],
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": "./app",
+    "paths": {
+      "~app/*": ["./*"],
+      "~components/*": ["components/*"],
+      "~config/*": ["config/*"],
+      "~constants/*": ["constants/*"],
+      "~i18n/*": ["i18n/*"],
+      "~navigators/*": ["navigators/*"],
+      "~screens/*": ["screens/*"],
+      "~services/*": ["services/*"],
+      "~theme/*": ["theme/*"],
+      "~utils/*": ["utils/*"],
+      "~models/*": ["models/*"],
+      "~plugins/*": ["plugins/*"],
+      // use index
+      "~components": ["components"],
+      "~config": ["config"],
+      "~constants": ["constants"],
+      "~i18n": ["i18n"],
+      "~navigators": ["navigators"],
+      "~screens": ["screens"],
+      "~services": ["services"],
+      "~theme": ["theme"],
+      "~utils": ["utils"],
+      "~models": ["models"],
+    }
   },
   "exclude": ["node_modules"],
-  "include": ["index.js", "app", "test", "storybook"]
+  "include": ["index.js", "app", "test", "storybook", "node_modules/react-native-redash/lib/typescript/v1/index.d.ts"]
 }
