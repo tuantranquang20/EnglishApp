@@ -4,14 +4,9 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { BottomTab } from "./bottom-tab"
+import { AppStacks } from "./constants"
 
-export type NavigatorParamList = {
-  welcome: undefined
-  demo: undefined
-  demoList: undefined
-}
-
-const Stack = createNativeStackNavigator<NavigatorParamList>()
+const Stack = createNativeStackNavigator()
 
 const AppStack = () => {
   return (
@@ -19,9 +14,8 @@ const AppStack = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="welcome"
     >
-      <Stack.Screen name="welcome" component={BottomTab} />
+      <Stack.Screen name={AppStacks.BottomTab} component={BottomTab} />
     </Stack.Navigator>
   )
 }

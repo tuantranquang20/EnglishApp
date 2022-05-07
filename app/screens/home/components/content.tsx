@@ -5,11 +5,20 @@ import AnimatedLottieView from "lottie-react-native"
 import { AnimatedSection, useCollapsible } from "~app/components/collapsible"
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 import { navigate } from "~app/navigators"
-import { RouteName } from "~app/navigators/constants"
+import { AnimationObject } from "react-native-reanimated/lib/types/lib/reanimated2/commonTypes"
 
 const LottieViewAnimated = Animated.createAnimatedComponent(AnimatedLottieView)
 
-export function Content({ item }) {
+type Props = {
+  item: {
+    title: string
+    icon: string | AnimationObject
+    screen: string
+  }
+}
+
+export function Content(props: Props) {
+  const { item } = props
   const { animatedHeight, height, onPress, onLayout, state } = useCollapsible()
   const [toggle, setToggle] = useState(false)
   const toggleValue = useSharedValue(0)
@@ -18,8 +27,8 @@ export function Content({ item }) {
     setToggle(!toggle)
     onPress()
   }
-  const handleNavigate = () => {
-    navigate(RouteName.ReadingScreen)
+  const handleNavigate = (screen) => () => {
+    navigate(screen)
   }
 
   const spin = useAnimatedStyle(() => {
@@ -54,7 +63,7 @@ export function Content({ item }) {
         </TouchableOpacity>
         <AnimatedSection animatedHeight={animatedHeight} onLayout={onLayout} state={state}>
           <View style={styles.textContainer}>
-            <Button onPress={handleNavigate} text={"text"} />
+            <Button onPress={handleNavigate(item.screen)} text={"text"} />
           </View>
         </AnimatedSection>
       </View>

@@ -1,106 +1,193 @@
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import React, { useEffect, useRef } from "react"
-import FlipCard from "~app/components/flip-card/flip-card"
-import ReanimatedCarousel from "~app/components/reanimated-carousel"
-import Tts from "react-native-tts"
-import { Button } from "~app/components"
-import { BackCard } from "./components/back-card"
-import { FrontCard } from "./components/front-card"
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import FlipCard from "~app/components/flip-card/flip-card";
+import ReanimatedCarousel from "~app/components/reanimated-carousel";
+import Tts from "react-native-tts";
+import { BackCard } from "./components/back-card";
+import { FrontCard } from "./components/front-card";
+import { color } from "~app/theme";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  createReading,
+  getDataFromRealTimeDB,
+} from "~app/services/api/realtime-database";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window")
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 const data = [
   {
     word: "Apple",
     translateWord: "Quả Táo",
+    image:
+      "https://cdn.picpng.com/apple/apple-apple-tree-fruits-fruit-46395.png",
+    description: "",
+    pronunciation: "ˈapəl",
   },
   {
     word: "Orange",
     translateWord: "Quả Cam",
-  },
-  {
-    word: "Banana",
-    translateWord: "Quả Chuối",
-  },
-  {
-    word: "Grape",
-    translateWord: "Quả Nho",
-  },
-  {
-    word: "Grapefruit",
-    translateWord: "Quả Bưởi",
-  },
-  {
-    word: "Starfruit",
-    translateWord: "Quả Khế",
+    image: "https://cdn.picpng.com/orange/pic-orange-25731.png",
+    description: "",
+    pronunciation: "ˈɒr.ɪndʒ/",
   },
   {
     word: "Mango",
     translateWord: "Quả Xoài",
+    image:
+      "https://cdn.picpng.com/fresh/fresh-fruits-healthy-leaf-mango-62189.png",
+    description: "",
+    pronunciation: "ˈmæŋ.ɡəʊ",
   },
   {
     word: "Lemon",
     translateWord: "Quả Chanh",
+    image:
+      "https://cdn.picpng.com/fruits-1/citron-citrus-fruits-food-lemon-88489.png",
+    description: "",
+    pronunciation: "ˈlem.ən",
   },
   {
     word: "Cherry",
     translateWord: "Quả Anh Đào",
+    image: "https://cdn.picpng.com/cherry/cherry-background-25371.png",
+    description: "",
+    pronunciation: "ˈtʃer.i",
   },
   {
-    word: "Berry",
-    translateWord: "Quả Dâu",
+    word: "Banana",
+    translateWord: "Quả Chuối",
+    image: "https://cdn.picpng.com/banana/pic-banana-25326.png",
+    description: "",
+    pronunciation: "bəˈnɑː.nə",
   },
-]
+  {
+    word: "Grape",
+    translateWord: "Quả Nho",
+    image: "https://cdn.picpng.com/grape/pic-grape-25493.png",
+    description: "",
+    pronunciation: "ɡreɪp",
+  },
+  {
+    word: "Starfruit",
+    translateWord: "Quả Khế",
+    image:
+      "https://cdn.picpng.com/fruit/starfruit-fruit-yellow-carambola-92925.png",
+    description: "",
+    pronunciation: "stɑː.fruːt",
+  },
+];
 
 export function ReadingScreen() {
+  const insets = useSafeAreaInsets();
+  // const [loading, setLoading] = useState(true);
+
   const initTts = async () => {
-    const voices = await Tts.voices()
-    if (voices && voices.length > 0) {
-      try {
-        // 5, 9, 10, 6, 8: male
-        await Tts.setDefaultLanguage(voices[9].language)
-      } catch (err) {
-        console.log(`setDefaultLanguage error `, err)
-      }
-      await Tts.setDefaultVoice(voices[9].id)
-    }
-  }
+    // const voices = await Tts.voices();
+    // if (voices && voices.length > 0) {
+    //   try {
+    //     // 5, 9, 10, 6, 8: male
+    //     await Tts.setDefaultLanguage(voices[9].language);
+    //   } catch (err) {
+    //     console.log(`setDefaultLanguage error `, err);
+    //   }
+    //   await Tts.setDefaultVoice(voices[9].id);
+    // }
+  };
+  // const addItemFireStore = useCallback(async () => {
+  //   // await createEntity({
+  //   //   model: "reading",
+  //   //   item: {
+  //   //     word: "Apple",
+  //   //     translateWord: "Quả Táo",
+  //   //     image: "https://cdn.picpng.com/apple/apple-apple-tree-fruits-fruit-46395.png",
+  //   //     description: "",
+  //   //     pronunciation: "ˈapəl",
+  //   //   },
+  //   // })
+
+  //   // const result = await setMultiData(data, "reading", "exerciseOne")
+  //   // console.log("result", result)
+  //   // console.log("aaa", result.docs[0].data())
+  //   // console.log(
+  //   //   "await fStoreCollection()",
+  //   //   await getEntity({
+  //   //     collection: "reading",
+  //   //     model: "exercise",
+  //   //   }),
+  //   // )
+  //   // const result = await getAllEntityByQuery({
+  //   //   collection: "reading",
+  //   //   exercise: "exercise",
+  //   //   practice: "exerciseOne",
+  //   // })
+  //   // console.log(result.docs)
+  //   // console.log(
+  //   //   "fStoreTest",
+  //   //   await fStoreTest({
+  //   //     item: {
+  //   //       word: "Starfruit",
+  //   //       translateWord: "Quả Khế",
+  //   //       image: "https://cdn.picpng.com/fruit/starfruit-fruit-yellow-carambola-92925.png",
+  //   //       description: "",
+  //   //       pronunciation: "stɑː.fruːt",
+  //   //     },
+  //   //   }),
+  //   // )
+  // }, [])
+  // useEffect(() => {
+  //   addItemFireStore()
+  // }, [])
+  useEffect(() => {
+    Tts.addEventListener("tts-start", (event) => console.log("Start"));
+    Tts.addEventListener("tts-finish", (event) => console.log("Finish"));
+    Tts.addEventListener("tts-cancel", (event) => console.log("Cancel"));
+    Tts.getInitStatus().then(initTts);
+  }, []);
+
+  const testFirebase = useCallback(async () => {
+    // await createReading();
+    await getDataFromRealTimeDB();
+  }, []);
 
   useEffect(() => {
-    Tts.addEventListener("tts-start", (event) => console.log("Start"))
-    Tts.addEventListener("tts-finish", (event) => console.log("Finish"))
-    Tts.addEventListener("tts-cancel", (event) => console.log("Cancel"))
-    // Tts.addEventListener("tts-progress", (event) => console.log(event, "tts-progress"))
-    Tts.getInitStatus().then(initTts)
-  }, [])
+    testFirebase();
+  }, []);
 
   const readText = async (text = "") => {
-    Tts.stop()
-    Tts.speak(text)
-  }
+    Tts.stop();
+    Tts.speak(text);
+  };
 
   const renderItem = ({ item }) => {
-    const viewRef = useRef()
+    const cardRef = useRef();
+    const handleFlipCard = () => cardRef.current.flipLeft();
+
     return (
-      <>
-        <FlipCard
-          gestureEnabled={false}
-          ref={(ref) => (viewRef.current = ref)}
-          width={300}
-          height={500}
-        >
-          <BackCard item={item} handleSpeak={readText} />
-          <FrontCard item={item} handleSpeak={readText} />
-          <View></View>
-        </FlipCard>
-        <TouchableOpacity onPress={() => viewRef.current.flipLeft()}>
-          <Text>aaaa</Text>
-        </TouchableOpacity>
-      </>
-    )
-  }
+      <FlipCard
+        gestureEnabled={false}
+        ref={(ref) => (cardRef.current = ref)}
+        width={300}
+        height={500}
+      >
+        <BackCard
+          item={item}
+          handleFlipCard={handleFlipCard}
+          handleSpeak={readText}
+        />
+        <FrontCard item={item} handleFlipCard={handleFlipCard} />
+      </FlipCard>
+    );
+  };
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top + 50 }]}>
+      {/* {!loading && <Loading />}
+      {loading && ( */}
       <ReanimatedCarousel
         loop={false}
         style={{
@@ -108,37 +195,31 @@ export function ReadingScreen() {
           height: screenHeight,
         }}
         width={300}
-        data={data}
+        height={500}
+        data={data || []}
         modeConfig={{
-          stackInterval: 30,
+          parallaxScrollingOffset: 0,
+          parallaxScrollingScale: 1,
+          parallaxAdjacentItemScale: 0.9,
         }}
         panGestureHandlerProps={{
           activeOffsetX: [-10, 10],
         }}
-        height={500}
         mode="horizontal-stack"
-        customConfig={() => ({ type: "positive" })}
-        scrollAnimationDuration={1000}
+        scrollAnimationDuration={300}
         renderItem={renderItem}
+        windowSize={10}
       />
+      {/* )} */}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: color.palette.white,
     flex: 1,
     justifyContent: "center",
-    paddingTop: 50,
   },
-  frontStyle: {
-    alignItems: "center",
-    backgroundColor: "#f00",
-    borderRadius: 20,
-    height: 500,
-    justifyContent: "center",
-    width: 300,
-  },
-})
+});

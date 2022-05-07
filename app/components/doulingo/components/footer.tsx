@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Footer = () => {
+const Footer = (props: any) => {
   const insets = useSafeAreaInsets();
   return (
     <View
@@ -37,7 +37,7 @@ const Footer = () => {
           ...StyleSheet.absoluteFillObject,
         }}
       />
-      <RectButton style={styles.button}>
+      <RectButton onPress={props.handlePress} style={styles.button}>
         <Text style={styles.label}>CHECK</Text>
       </RectButton>
     </View>

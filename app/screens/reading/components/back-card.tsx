@@ -1,24 +1,44 @@
-import { StyleSheet, Text, View } from "react-native"
-import React from "react"
+import { StyleSheet, View } from "react-native"
+import React, { useMemo } from "react"
 import { color } from "~app/theme"
-import { Button } from "~app/components"
+import { FImage, Text } from "~app/components"
+import BottomActionCard from "./bottom-action-card"
 
-interface Props {
+type Props = {
+  handleSpeak: (word: string) => void
+  handleFlipCard: () => void
   item: {
     word: string
+    image: string
+    pronunciation: string
   }
-  handleSpeak: (word: string) => void
 }
 
 export function BackCard(props: Props) {
-  const { item, handleSpeak } = props
-  const onPress = () => {
-    handleSpeak(item.word)
-  }
+  const { item, handleFlipCard, handleSpeak } = props
+  const colorRandom = useMemo(() => {
+    const colors = [
+      color.palette.orange,
+      color.palette.orangeDarker,
+      color.palette.purple,
+      color.palette.offWhite,
+      color.palette.green,
+      color.palette.pink,
+      color.palette.blueWhite,
+      color.palette.blue,
+      color.palette.deepPurple,
+    ]
+    return colors[Math.floor(Math.random() * colors.length)]
+  }, [])
+
   return (
-    <View style={styles.backStyle}>
-      <Text style={styles.title}>{item.word}</Text>
-      <Button text="Speak" onPress={onPress} />
+    <View style={[styles.backStyle, { backgroundColor: colorRandom }]}>
+      {item.image && (
+        <FImage resizeMode={"contain"} source={{ uri: item?.image }} style={styles.img} />
+      )}
+      <Text preset="header" style={styles.title} text={item?.word} />
+      <Text style={styles.pronunciation} text={item?.pronunciation} />
+      <BottomActionCard item={item} handleFlipCard={handleFlipCard} handleSpeak={handleSpeak} />
     </View>
   )
 }
@@ -26,14 +46,22 @@ export function BackCard(props: Props) {
 const styles = StyleSheet.create({
   backStyle: {
     alignItems: "center",
-    backgroundColor: "#f0f",
+    backgroundColor: color.palette.orange,
     borderRadius: 20,
     height: 500,
     justifyContent: "center",
     width: 300,
   },
+  img: {
+    height: 250,
+    width: 250,
+  },
+  pronunciation: {
+    color: color.palette.white,
+  },
   title: {
     color: color.palette.white,
-    fontSize: 25,
+    fontSize: 30,
+    marginTop: 15,
   },
 })

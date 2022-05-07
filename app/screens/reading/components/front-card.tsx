@@ -1,26 +1,25 @@
 import { StyleSheet, Text, View } from "react-native"
 import React from "react"
 import { color } from "~app/theme"
-import { Button } from "~app/components"
+import BottomActionCard from "./bottom-action-card"
 
-interface Props {
+type Props = {
+  handleFlipCard: () => void
   item: {
     word: string
+    image: string
+    pronunciation: string
     translateWord: string
   }
-  handleSpeak: (word: string) => void
 }
 
 export function FrontCard(props: Props) {
-  const { item, handleSpeak } = props
+  const { item, handleFlipCard } = props
 
-  const onPress = () => {
-    handleSpeak(item.translateWord)
-  }
   return (
     <View style={styles.backStyle}>
       <Text style={styles.title}>{item.translateWord}</Text>
-      <Button text="Speak" onPress={onPress} />
+      <BottomActionCard disableSpeak item={item} handleFlipCard={handleFlipCard} />
     </View>
   )
 }
@@ -28,7 +27,7 @@ export function FrontCard(props: Props) {
 const styles = StyleSheet.create({
   backStyle: {
     alignItems: "center",
-    backgroundColor: "#EE0000",
+    backgroundColor: color.palette.red,
     borderRadius: 20,
     height: 500,
     justifyContent: "center",

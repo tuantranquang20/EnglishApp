@@ -1,14 +1,14 @@
 /* eslint-disable react/display-name */
-import React from "react"
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { StyleSheet } from "react-native"
-import { ProfileScreen, SaveScreen } from "~app/screens"
-import { RouteName } from "./constants"
-import AnimatedLottieView from "lottie-react-native"
-import { color } from "~app/theme"
-import { HomeStack } from "./stack/home-stack"
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { StyleSheet } from "react-native";
+import { ProfileScreen, SaveScreen } from "~app/screens";
+import { AppStacks, RouteName } from "./constants";
+import AnimatedLottieView from "lottie-react-native";
+import { color } from "~app/theme";
+import { HomeStack } from "./stack/home-stack";
 
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator();
 
 export function BottomTab() {
   return (
@@ -18,7 +18,7 @@ export function BottomTab() {
       }}
     >
       <Tab.Screen
-        name={RouteName.HomeScreen}
+        name={AppStacks.HomeStack}
         component={HomeStack}
         options={{
           headerShown: false,
@@ -33,7 +33,7 @@ export function BottomTab() {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name={RouteName.SaveScreen}
         component={SaveScreen}
         options={{
@@ -48,7 +48,7 @@ export function BottomTab() {
             />
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name={RouteName.ProfileScreen}
         component={ProfileScreen}
@@ -66,27 +66,25 @@ export function BottomTab() {
         }}
       />
     </Tab.Navigator>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: color.palette.white,
-    borderRadius: 15,
     borderTopColor: color.palette.white,
-    bottom: 25,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     elevation: 5,
     height: 60,
-    left: 20,
     paddingBottom: 5,
     position: "absolute",
-    right: 20,
-    shadowColor: color.palette.purple,
+    shadowColor: color.palette.lightGrey,
     shadowOffset: {
       width: 0,
-      height: 5,
+      height: 1,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.5,
     shadowRadius: 5,
   },
   homeIcon: {
@@ -102,4 +100,4 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     width: 38,
   },
-})
+});

@@ -4,6 +4,7 @@ import { HeaderProps } from "./header.props"
 import { Card } from "../card/card"
 import { Text } from "../text/text"
 import { StyleSheet, View } from "react-native"
+import { color } from "~app/theme"
 
 export function HomeHeader(props: HeaderProps) {
   const { onLeftPress, onRightPress } = props

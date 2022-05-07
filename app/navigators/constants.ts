@@ -15,6 +15,10 @@ export enum RouteName {
   SpeakingScreen = "SpeakingScreen",
   ListeningScreen = "ListeningScreen",
   GrammarScreen = "GrammarScreen",
+  LessonReadingScreen = "LessonReadingScreen",
+  LessonListingScreen = "LessonListingScreen",
+  LessonSpeakingScreen = "LessonSpeakingScreen",
+  LessonGrammarScreen = "LessonGrammarScreen",
 }
 export type NavigatorParamList = {
   [RouteName.HomeScreen]: undefined

@@ -12,15 +12,26 @@ interface LinesProps {
 }
 
 export default function Lines(props: LinesProps) {
-  const { containerHeight, containerStyle, numLines, lineHeight, lineStyle, renderTopLine = true } = props;
+  const {
+    containerHeight,
+    containerStyle,
+    numLines,
+    lineHeight,
+    lineStyle,
+    renderTopLine = true,
+  } = props;
   const arr = new Array(numLines).fill(0);
-
   return (
     <View style={[{ height: containerHeight }, containerStyle]}>
       {arr.map((_, idx) => (
         <View
           key={`line.${idx}`}
-          style={[{ height: lineHeight }, styles.line, idx === 0 && renderTopLine && styles.firstLine, lineStyle]}
+          style={[
+            { height: lineHeight },
+            styles.line,
+            idx === 0 && renderTopLine && styles.firstLine,
+            lineStyle,
+          ]}
         />
       ))}
     </View>
