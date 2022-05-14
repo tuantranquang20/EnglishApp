@@ -1,4 +1,12 @@
 import database from "@react-native-firebase/database";
+import map from "lodash/map";
+
+const convertObjectToArray = (obj) => {
+  const result = map(obj, (value, key) => {
+    return { ...value, key };
+  });
+  return result;
+};
 
 const ref = (collection = "") => {
   const fRef = database().ref("englishApp").child(collection);
@@ -6,22 +14,27 @@ const ref = (collection = "") => {
 };
 
 export const createReading = async () => {
-  const result = await ref("reading")
-    .child("lessonOne")
-    .child("title")
-    .set("Fruit");
-  console.log(result);
+  await ref("reading")
+    .child("lessonTwo")
+    .child("data")
+    .once("value", () => {
+      ref("reading").child("lessonTwo").child("data").push({
+        word: "Lady",
+        translateWord: "Quý bà",
+        image: "",
+        description: "",
+        pronunciation: "ˈlādē",
+      });
+    });
 };
 
-export const getDataFromRealTimeDB = async () => {
-  await ref("listening")
-    .child("lessonOne")
+export const getDataFromRealTimeDB = async (data, callback) => {
+  await ref(data?.collection)
+    .child(data?.lesson)
     .child("data")
-    // .child("1651464619623")
     .on("value", (snapshot) => {
-      console.log(snapshot.val());
+      callback(convertObjectToArray(snapshot.val()));
     });
-  //   console.log(result);
 };
 
 export const createSpeaking = async () => {
@@ -35,9 +48,8 @@ export const createSpeaking = async () => {
   console.log(result);
 };
 
-export const getDataLesson = async () => {
-  await ref("reading").on("value", (snapshot) => {
-    console.log(snapshot.val());
-  });
-  //   console.log(result);
+export const getDataLesson = async (callback) => {
+  await ref("reading").on("value", (snapshot) =>
+    callback(convertObjectToArray(snapshot.val()))
+  );
 };

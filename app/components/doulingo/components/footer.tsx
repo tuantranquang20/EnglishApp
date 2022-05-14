@@ -1,47 +1,36 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: "#59CB01",
-    width: "100%",
-    height: 45,
-    borderRadius: 16,
-    justifyContent: "center",
-  },
-  label: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 18,
-    textAlign: "center",
-  },
-});
+import { Text } from "~app/components/text/text";
+import { color } from "~app/theme";
 
 const Footer = (props: any) => {
   const insets = useSafeAreaInsets();
   return (
-    <View
-      style={{
-        paddingBottom: insets.bottom,
-        alignItems: "center",
-        margin: 16,
-      }}
+    <RectButton
+      onPress={props.handlePress}
+      style={[{ marginBottom: insets.bottom + 30 }, styles.button]}
     >
-      <View
-        style={{
-          backgroundColor: "#1B9A00",
-          borderRadius: 16,
-          height: 50,
-          ...StyleSheet.absoluteFillObject,
-        }}
-      />
-      <RectButton onPress={props.handlePress} style={styles.button}>
-        <Text style={styles.label}>CHECK</Text>
-      </RectButton>
-    </View>
+      <Text style={styles.label}>CHECK</Text>
+    </RectButton>
   );
 };
 
 export default Footer;
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: color.palette.green,
+    borderRadius: 16,
+    height: 45,
+    justifyContent: "center",
+    width: "100%",
+  },
+  label: {
+    color: color.palette.white,
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+});

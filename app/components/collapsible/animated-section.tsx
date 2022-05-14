@@ -36,13 +36,13 @@ export function AnimatedSection({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+  },
   overflowHidden: {
     overflow: 'hidden',
-  },
-  container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
   },
 });

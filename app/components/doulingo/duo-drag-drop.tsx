@@ -15,6 +15,7 @@ import {
   LayoutRectangle,
   StyleProp,
   ViewStyle,
+  Dimensions,
 } from "react-native";
 import { useSharedValue, runOnUI } from "react-native-reanimated";
 import SortableWord from "./sortable-word";
@@ -24,6 +25,9 @@ import Placeholder from "./placeholder";
 import Lines from "./lines";
 import type { DuoAnimatedStyleWorklet } from "./types";
 import { color } from "~app/theme";
+import Header from "./components/header";
+
+const { width: screenWidth } = Dimensions.get("window");
 interface ComputeWordLayoutProps {
   children: JSX.Element[];
   offsets: Offset[];
@@ -78,6 +82,7 @@ export interface DuoDragDropProps {
   animatedStyleWorklet?: DuoAnimatedStyleWorklet;
   /** Runs when the drag-and-drop has rendered */
   onReady?: (ready: boolean) => void;
+  handlePressLottie: () => void;
 }
 
 export const WordContext = createContext({
@@ -378,9 +383,9 @@ function ComputeWordLayout({
 const DuoDragDropInstance = React.forwardRef<DuoDragDropRef, DuoDragDropProps>(
   (props, ref) => {
     const wordsKey = JSON.stringify(props.words);
-    // We need to re-mount the component if words are modified to avoid hook mismatches. "useSharedValue" is initialized on every word
     return (
       <View style={rnStyles.container}>
+        <Header handlePressLottie={props.handlePressLottie} />
         <DuoDragDrop ref={ref} {...props} key={wordsKey} />
       </View>
     );
@@ -401,6 +406,7 @@ const rnStyles = StyleSheet.create({
     backgroundColor: color.palette.white,
     flex: 1,
     position: "relative",
+    width: screenWidth,
   },
   left: {
     justifyContent: "flex-start",

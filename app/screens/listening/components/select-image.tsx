@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { Dimensions, Pressable, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { FImage, PressScale } from "~app/components";
 import Animated, {
@@ -9,14 +9,16 @@ import Animated, {
 } from "react-native-reanimated";
 import { color } from "~app/theme";
 import { isIOS } from "~app/utils/helper";
-
+import Header from "~app/components/doulingo/components/header";
+const { width: screenWidth } = Dimensions.get("window");
 type Props = {
   data: any;
   handlePressImage: (text: string) => void;
+  handlePressLottie: () => void;
 };
 
 export function SelectImage(props: Props) {
-  const { data, handlePressImage } = props;
+  const { data, handlePressImage, handlePressLottie } = props;
   const [answerSelected, setAnswerSelected] = useState("");
 
   const handleSelect = (item) => () => {
@@ -59,6 +61,7 @@ export function SelectImage(props: Props) {
 
   return (
     <View style={styles.container}>
+      <Header handlePressLottie={handlePressLottie} />
       {data?.answer.map((el, index) => renderItem(el, index))}
     </View>
   );
@@ -84,6 +87,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "flex-start",
+    width: screenWidth,
   },
   img: {
     alignSelf: "center",

@@ -1,10 +1,4 @@
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import FlipCard from "~app/components/flip-card/flip-card";
 import ReanimatedCarousel from "~app/components/reanimated-carousel";
@@ -13,136 +7,30 @@ import { BackCard } from "./components/back-card";
 import { FrontCard } from "./components/front-card";
 import { color } from "~app/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  createReading,
-  getDataFromRealTimeDB,
-} from "~app/services/api/realtime-database";
+import { getDataFromRealTimeDB } from "~app/services/api/realtime-database";
+import { useRoute } from "@react-navigation/native";
+import { COLLECTION } from "~app/constants/constants";
+import { ICardRef } from "./interface";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-const data = [
-  {
-    word: "Apple",
-    translateWord: "Quả Táo",
-    image:
-      "https://cdn.picpng.com/apple/apple-apple-tree-fruits-fruit-46395.png",
-    description: "",
-    pronunciation: "ˈapəl",
-  },
-  {
-    word: "Orange",
-    translateWord: "Quả Cam",
-    image: "https://cdn.picpng.com/orange/pic-orange-25731.png",
-    description: "",
-    pronunciation: "ˈɒr.ɪndʒ/",
-  },
-  {
-    word: "Mango",
-    translateWord: "Quả Xoài",
-    image:
-      "https://cdn.picpng.com/fresh/fresh-fruits-healthy-leaf-mango-62189.png",
-    description: "",
-    pronunciation: "ˈmæŋ.ɡəʊ",
-  },
-  {
-    word: "Lemon",
-    translateWord: "Quả Chanh",
-    image:
-      "https://cdn.picpng.com/fruits-1/citron-citrus-fruits-food-lemon-88489.png",
-    description: "",
-    pronunciation: "ˈlem.ən",
-  },
-  {
-    word: "Cherry",
-    translateWord: "Quả Anh Đào",
-    image: "https://cdn.picpng.com/cherry/cherry-background-25371.png",
-    description: "",
-    pronunciation: "ˈtʃer.i",
-  },
-  {
-    word: "Banana",
-    translateWord: "Quả Chuối",
-    image: "https://cdn.picpng.com/banana/pic-banana-25326.png",
-    description: "",
-    pronunciation: "bəˈnɑː.nə",
-  },
-  {
-    word: "Grape",
-    translateWord: "Quả Nho",
-    image: "https://cdn.picpng.com/grape/pic-grape-25493.png",
-    description: "",
-    pronunciation: "ɡreɪp",
-  },
-  {
-    word: "Starfruit",
-    translateWord: "Quả Khế",
-    image:
-      "https://cdn.picpng.com/fruit/starfruit-fruit-yellow-carambola-92925.png",
-    description: "",
-    pronunciation: "stɑː.fruːt",
-  },
-];
-
 export function ReadingScreen() {
   const insets = useSafeAreaInsets();
-  // const [loading, setLoading] = useState(true);
+  const [dataOfLesson, setDataOfLesson] = useState([]);
+  const { params } = useRoute();
 
   const initTts = async () => {
-    // const voices = await Tts.voices();
-    // if (voices && voices.length > 0) {
-    //   try {
-    //     // 5, 9, 10, 6, 8: male
-    //     await Tts.setDefaultLanguage(voices[9].language);
-    //   } catch (err) {
-    //     console.log(`setDefaultLanguage error `, err);
-    //   }
-    //   await Tts.setDefaultVoice(voices[9].id);
-    // }
+    const voices = await Tts.voices();
+    if (voices && voices.length > 0) {
+      try {
+        // 5, 9, 10, 6, 8: male
+        await Tts.setDefaultLanguage(voices[9].language);
+      } catch (err) {
+        console.log(`setDefaultLanguage error `, err);
+      }
+      await Tts.setDefaultVoice(voices[9].id);
+    }
   };
-  // const addItemFireStore = useCallback(async () => {
-  //   // await createEntity({
-  //   //   model: "reading",
-  //   //   item: {
-  //   //     word: "Apple",
-  //   //     translateWord: "Quả Táo",
-  //   //     image: "https://cdn.picpng.com/apple/apple-apple-tree-fruits-fruit-46395.png",
-  //   //     description: "",
-  //   //     pronunciation: "ˈapəl",
-  //   //   },
-  //   // })
-
-  //   // const result = await setMultiData(data, "reading", "exerciseOne")
-  //   // console.log("result", result)
-  //   // console.log("aaa", result.docs[0].data())
-  //   // console.log(
-  //   //   "await fStoreCollection()",
-  //   //   await getEntity({
-  //   //     collection: "reading",
-  //   //     model: "exercise",
-  //   //   }),
-  //   // )
-  //   // const result = await getAllEntityByQuery({
-  //   //   collection: "reading",
-  //   //   exercise: "exercise",
-  //   //   practice: "exerciseOne",
-  //   // })
-  //   // console.log(result.docs)
-  //   // console.log(
-  //   //   "fStoreTest",
-  //   //   await fStoreTest({
-  //   //     item: {
-  //   //       word: "Starfruit",
-  //   //       translateWord: "Quả Khế",
-  //   //       image: "https://cdn.picpng.com/fruit/starfruit-fruit-yellow-carambola-92925.png",
-  //   //       description: "",
-  //   //       pronunciation: "stɑː.fruːt",
-  //   //     },
-  //   //   }),
-  //   // )
-  // }, [])
-  // useEffect(() => {
-  //   addItemFireStore()
-  // }, [])
   useEffect(() => {
     Tts.addEventListener("tts-start", (event) => console.log("Start"));
     Tts.addEventListener("tts-finish", (event) => console.log("Finish"));
@@ -151,8 +39,12 @@ export function ReadingScreen() {
   }, []);
 
   const testFirebase = useCallback(async () => {
-    // await createReading();
-    await getDataFromRealTimeDB();
+    // await createReading()
+    const body = {
+      collection: COLLECTION.reading,
+      lesson: params,
+    };
+    await getDataFromRealTimeDB(body, (data) => setDataOfLesson(data));
   }, []);
 
   useEffect(() => {
@@ -165,13 +57,13 @@ export function ReadingScreen() {
   };
 
   const renderItem = ({ item }) => {
-    const cardRef = useRef();
+    const cardRef = useRef<ICardRef>();
     const handleFlipCard = () => cardRef.current.flipLeft();
 
     return (
       <FlipCard
         gestureEnabled={false}
-        ref={(ref) => (cardRef.current = ref)}
+        ref={(ref: ICardRef) => (cardRef.current = ref)}
         width={300}
         height={500}
       >
@@ -186,8 +78,6 @@ export function ReadingScreen() {
   };
   return (
     <View style={[styles.container, { paddingTop: insets.top + 50 }]}>
-      {/* {!loading && <Loading />}
-      {loading && ( */}
       <ReanimatedCarousel
         loop={false}
         style={{
@@ -196,7 +86,7 @@ export function ReadingScreen() {
         }}
         width={300}
         height={500}
-        data={data || []}
+        data={dataOfLesson || []}
         modeConfig={{
           parallaxScrollingOffset: 0,
           parallaxScrollingScale: 1,
@@ -210,7 +100,6 @@ export function ReadingScreen() {
         renderItem={renderItem}
         windowSize={10}
       />
-      {/* )} */}
     </View>
   );
 }

@@ -17,7 +17,7 @@ type Props = {
 export default function BottomActionCard(props: Props) {
   const { item, handleFlipCard, handleSpeak, disableSpeak } = props
   const onPress = () => {
-    handleSpeak(item.word)
+    handleSpeak(item?.word)
   }
   return (
     <View style={styles.vBottom}>

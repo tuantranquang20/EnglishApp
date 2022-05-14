@@ -1,9 +1,9 @@
-import { Dimensions, Platform } from "react-native"
-import { DuoAnimatedStyleWorklet } from "~app/components/doulingo"
+import { Dimensions, Platform } from "react-native";
+import { DuoAnimatedStyleWorklet } from "~app/components/doulingo";
 import { withSpring, withTiming } from "react-native-reanimated";
 
 export function isIphoneX() {
-  const dimen = Dimensions.get("window")
+  const dimen = Dimensions.get("window");
   return (
     Platform.OS === "ios" &&
     !Platform.isPad &&
@@ -18,19 +18,19 @@ export function isIphoneX() {
       dimen.width === 896 ||
       dimen.height === 926 ||
       dimen.width === 926)
-  )
+  );
 }
 export function ifIphoneX(iphoneXStyle, regularStyle) {
   if (isIphoneX()) {
-    return iphoneXStyle
+    return iphoneXStyle;
   }
-  return regularStyle
+  return regularStyle;
 }
 
 export function getBottomSpace() {
-  return isIphoneX() ? 34 : 0
+  return isIphoneX() ? 34 : 0;
 }
-export const isIOS = Platform.OS === "ios"
+export const isIOS = Platform.OS === "ios";
 
 export const customAnimatedStyle: DuoAnimatedStyleWorklet = (
   style,
@@ -49,4 +49,38 @@ export const customAnimatedStyle: DuoAnimatedStyleWorklet = (
   }
 
   return style;
+};
+
+export const getLottieRandom = () => {
+  const lotties = [
+    require("../../assets/lotties/fox.json"),
+    require("../../assets/lotties/bee.json"),
+    require("../../assets/lotties/star-in-hand-baby-astronaut.json"),
+    require("../../assets/lotties/satisfied-bear.json"),
+    require("../../assets/lotties/little-robot-icon.json"),
+    require("../../assets/lotties/owl.json"),
+  ];
+  return lotties[Math.floor(Math.random() * lotties.length)];
+};
+export const getSuccessLottie = () => {
+  const lotties = [
+    require("../../assets/lotties/success1.json"),
+    require("../../assets/lotties/success10.json"),
+    require("../../assets/lotties/success3.json"),
+    require("../../assets/lotties/success5.json"),
+    require("../../assets/lotties/success6.json"),
+    require("../../assets/lotties/success9.json"),
+  ];
+  return lotties[Math.floor(Math.random() * lotties.length)];
+};
+export const getFailedLottie = () => {
+  const lotties = [
+    require("../../assets/lotties/failed.json"),
+    require("../../assets/lotties/failed1.json"),
+    require("../../assets/lotties/failed3.json"),
+    require("../../assets/lotties/failed4.json"),
+    require("../../assets/lotties/failed6.json"),
+    require("../../assets/lotties/failed7.json"),
+  ];
+  return lotties[Math.floor(Math.random() * lotties.length)];
 };

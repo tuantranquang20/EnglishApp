@@ -1,160 +1,246 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, View, Animated, Dimensions } from "react-native";
 import DuoDragDrop, {
   DuoDragDropRef,
   Word,
   Placeholder,
   Lines,
 } from "~components/doulingo";
-import {
-  GestureHandlerRootView,
-  ScrollView,
-} from "react-native-gesture-handler";
 import { color } from "~app/theme";
-import isEqual from "lodash/isEqual";
 import { customAnimatedStyle } from "~app/utils/helper";
-import Header from "~app/components/doulingo/components/header";
 import Footer from "~app/components/doulingo/components/footer";
 import { SelectCell } from "./components/select-cell";
 import { SelectWord } from "./components/select-word";
 import { SelectImage } from "./components/select-image";
-import { testF } from "~app/services/api/firestore";
-// import { getCollection } from "~app/services/api/firestore";
+import { COLLECTION } from "~app/constants/constants";
+import { getDataFromRealTimeDB } from "~app/services/api/realtime-database";
+import {
+  scrollTo,
+  useAnimatedRef,
+  useDerivedValue,
+  useSharedValue,
+} from "react-native-reanimated";
+import { Screen } from "~app/components";
+import Tts from "react-native-tts";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "~app/utils/toast";
+import isEqual from "lodash/isEqual";
 
-const data = {
-  words: ["Juan", "apple", "____", "eat"],
-  answer: ["Juan", "eat", "apple"],
-  rawAnswer: "Juan eats apple",
-  type: "douLingo",
-  // type: "selectCell",
-  // type: "selectWord",
-  // type: "selectImage",
-};
-const dataCell = {
-  rawAnswer: "Apple",
-  words: ["Apple", "Orange", "Mango"],
-  type: "selectCell",
-};
-
-const dataWord = {
-  rawAnswer: "How old are you",
-  question: "How ___ are you?",
-  answer: "old",
-  words: ["many", "old", "about"],
-  type: "selectWord",
-};
-
-const dataImage = {
-  question: "What is apple?",
-  answer: [
-    {
-      word: "Apple",
-      image:
-        "https://cdn.picpng.com/apple/apple-apple-tree-fruits-fruit-46395.png",
-      description: "",
-      pronunciation: "ˈapəl",
-      isResult: true,
-    },
-    {
-      word: "Orange",
-      image: "https://cdn.picpng.com/orange/pic-orange-25731.png",
-      description: "",
-      pronunciation: "ˈɒr.ɪndʒ/",
-      isResult: false,
-    },
-    {
-      word: "Mango",
-      image:
-        "https://cdn.picpng.com/fresh/fresh-fruits-healthy-leaf-mango-62189.png",
-      description: "",
-      pronunciation: "ˈmæŋ.ɡəʊ",
-      isResult: false,
-    },
-    {
-      word: "Lemon",
-      image:
-        "https://cdn.picpng.com/fruits-1/citron-citrus-fruits-food-lemon-88489.png",
-      description: "",
-      pronunciation: "ˈlem.ən",
-      isResult: false,
-    },
-  ],
-  type: "selectImage",
-};
+const { width: screenWidth } = Dimensions.get("window");
 
 export function ListeningScreen() {
   const [gesturesDisabled, setGesturesDisabled] = useState(false);
-  const [answeredWords, setAnsweredWords] = useState<string[] | null>(null);
+  const [answered, setAnswered] = useState<string | null>(null);
   const duoDragDropRef = useRef<DuoDragDropRef>(null);
+  const [dataOfLesson, setDataOfLesson] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const aref = useAnimatedRef();
+  const scroll = useSharedValue(0);
+
+  useDerivedValue(() => {
+    scrollTo(aref, scroll.value * screenWidth, 0, true);
+  });
 
   const getAllData = useCallback(async () => {
-    // const result = await getCollection({
-    //   collection: "reading",
-    //   exercise: "exercise",
-    // }); 
-    // console.log("result", result);
-    // await testF({
-    //   collection: "reading",
-    // });
+    const body = {
+      collection: COLLECTION.listening,
+      lesson: "lessonOne",
+    };
+    await getDataFromRealTimeDB(body, (data) => setDataOfLesson(data));
   }, []);
 
   useEffect(() => {
     getAllData();
   }, []);
 
+  const initTts = async () => {
+    const voices = await Tts.voices();
+    if (voices && voices.length > 0) {
+      try {
+        // 5, 9, 10, 6, 8: male
+        await Tts.setDefaultLanguage(voices[9].language);
+      } catch (err) {
+        console.log(`setDefaultLanguage error `, err);
+      }
+      await Tts.setDefaultVoice(voices[9].id);
+    }
+  };
+  useEffect(() => {
+    Tts.addEventListener("tts-start", (event) => {});
+    Tts.addEventListener("tts-finish", (event) => {});
+    Tts.addEventListener("tts-cancel", (event) => {});
+    Tts.getInitStatus().then(initTts);
+  }, []);
+
+  const readText = async (text = "") => {
+    Tts.stop();
+    Tts.speak(text);
+  };
+
+  const handlePressWord = (word) => {
+    readText(word);
+    setAnswered(word);
+  };
+  const handlePressImage = (item) => {
+    readText(item?.word);
+    setAnswered(item?.word);
+  };
+  const handlePressCell = (word) => {
+    readText(word);
+    setAnswered(word);
+  };
+  const handlePressDouLingo = (word) => {
+    readText(word);
+    setAnswered(word);
+  };
+  const handlePressLottie = (answer) => () => {
+    readText(answer);
+  };
+  const handleCheckAnswer = (isTrue) => {
+    if (isTrue) {
+      Toast.show({
+        type: "success",
+        text1: "Nice!",
+        text2: "Next",
+      });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Sad!",
+        text2: "Keep going",
+      });
+    }
+  };
+  const handleSubmitAnswer = () => {
+    switch (dataOfLesson[currentIndex]?.type) {
+      case "douLingo":
+        const wordRef = duoDragDropRef.current?.getAnsweredWords();
+        console.log("wordRef", wordRef.join(" "));
+        // console.log("getWords", duoDragDropRef.current.getWords());
+        // console.log("wordRef", wordRef);
+        // console.log("duoDragDropRef.current", duoDragDropRef.current);
+        // isEqual(wordRef, data.answer);
+        // setAnsweredWords(duoDragDropRef.current?.getAnsweredWords() || []);
+        console.log("douLingo");
+        break;
+      case "selectCell":
+        console.log("selectCell");
+        break;
+      case "selectImage":
+        handleCheckAnswer(dataOfLesson[currentIndex]?.rawAnswer === answered);
+        break;
+      case "selectWord":
+        handleCheckAnswer(dataOfLesson[currentIndex]?.answer === answered);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const nextQuestion = () => {
+    setCurrentIndex(currentIndex + 1);
+    scroll.value = scroll.value + 1;
+    if (scroll.value >= dataOfLesson.length - 1) scroll.value = 0;
+  };
+
   return (
-    <GestureHandlerRootView style={styles.container}>
+    <Screen preset="fixed" statusBar="dark-content" style={styles.container}>
       <View style={styles.dragDropContainer}>
-        <Header />
-        {/* <DuoDragDrop
-            ref={duoDragDropRef}
-            words={data.words}
-            wordHeight={40}
-            lineHeight={49}
-            wordGap={4}
-            gesturesDisabled={gesturesDisabled}
-            wordBankOffsetY={10}
-            wordBankAlignment="center"
-            animatedStyleWorklet={customAnimatedStyle}
-            renderWord={() => <Word textStyle={styles.word} />}
-            renderPlaceholder={({ style }) => (
-              <Placeholder style={[style, { borderRadius: 5 }]} />
-            )}
-            renderLines={(props) => (
-              <Lines {...props} containerStyle={styles.lines} />
-            )}
-          /> */}
-        {/* <SelectCell
-          handlePressCell={(word) => console.log("word", word)}
-          data={dataCell}
-        /> */}
-        <SelectImage
-          handlePressImage={(item) => {
-            console.log("item", item.word);
-          }}
-          data={dataImage}
-        />
-        <Footer
-          handlePress={() => {
-            const wordRef = duoDragDropRef.current?.getAnsweredWords();
-            isEqual(wordRef, data.answer);
-            setAnsweredWords(duoDragDropRef.current?.getAnsweredWords() || []);
-          }}
-        />
-        {answeredWords && (
+        <Animated.ScrollView
+          ref={aref}
+          horizontal={true}
+          pagingEnabled={true}
+          bounces={false}
+          scrollEventThrottle={16}
+          showsHorizontalScrollIndicator={false}
+          scrollEnabled={false}
+        >
+          {dataOfLesson.map((el, index) => {
+            switch (el.type) {
+              case "douLingo":
+                return (
+                  <DuoDragDrop
+                    handlePressLottie={handlePressLottie(el?.rawAnswer)}
+                    key={`k-${index}`}
+                    ref={duoDragDropRef}
+                    words={el?.words}
+                    wordHeight={40}
+                    lineHeight={49}
+                    wordGap={4}
+                    gesturesDisabled={gesturesDisabled}
+                    wordBankOffsetY={10}
+                    wordBankAlignment="center"
+                    animatedStyleWorklet={customAnimatedStyle}
+                    renderWord={() => (
+                      <Word
+                        handlePressDouLingo={handlePressDouLingo}
+                        textStyle={styles.word}
+                      />
+                    )}
+                    renderPlaceholder={({ style }) => (
+                      <Placeholder style={[style, { borderRadius: 5 }]} />
+                    )}
+                    renderLines={(props) => (
+                      <Lines {...props} containerStyle={styles.lines} />
+                    )}
+                  />
+                );
+              case "selectCell":
+                return (
+                  <SelectCell
+                    handlePressLottie={handlePressLottie(el?.rawAnswer)}
+                    enableHeader={true}
+                    key={`k-${index}`}
+                    handlePressCell={handlePressCell}
+                    data={el}
+                  />
+                );
+              case "selectImage":
+                return (
+                  <SelectImage
+                    handlePressLottie={handlePressLottie(el?.question)}
+                    key={`k-${index}`}
+                    handlePressImage={handlePressImage}
+                    data={el}
+                  />
+                );
+              case "selectWord":
+                return (
+                  <SelectWord
+                    handlePressLottie={handlePressLottie(el?.rawAnswer)}
+                    key={`k-${index}`}
+                    handlePressWord={handlePressWord}
+                    data={el}
+                  />
+                );
+              default:
+                return <View key={`k-${index}`} />;
+            }
+          })}
+        </Animated.ScrollView>
+        <Footer handlePress={handleSubmitAnswer} />
+        {/* {answeredWords && (
           <View style={{ marginTop: 10 }}>
             <Text>{JSON.stringify(answeredWords)}</Text>
           </View>
-        )}
-        <View style={{ marginTop: 10 }}>
+        )} */}
+        {/* <View style={{ marginTop: 10 }}>
           <Button
             title={`Gestures disabled: ${gesturesDisabled}`}
             onPress={() => setGesturesDisabled((s) => !s)}
           />
-        </View>
+        </View> */}
       </View>
-    </GestureHandlerRootView>
+      <Toast
+        autoHide={true}
+        position="bottom"
+        bottomOffset={70}
+        config={toastConfig}
+        visibilityTime={5000}
+        onHide={nextQuestion}
+      />
+    </Screen>
   );
 }
 
@@ -165,12 +251,12 @@ const styles = StyleSheet.create({
   },
   dragDropContainer: {
     flex: 1,
-    margin: 20,
+    // margin: 20,
   },
-  // lines: {
-  //   backgroundColor: color.transparent,
-  // },
-  // word: {
-  //   color: color.palette.black,
-  // },
+  lines: {
+    backgroundColor: color.transparent,
+  },
+  word: {
+    color: color.palette.black,
+  },
 });

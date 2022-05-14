@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { PressScale, Text } from "~app/components";
 import { color } from "~app/theme";
@@ -9,16 +9,20 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { isIOS } from "~app/utils/helper";
+import Header from "~app/components/doulingo/components/header";
+const { width: screenWidth } = Dimensions.get("window");
 
 type Props = {
   data: any;
   handlePressCell: (word: string) => void;
+  handlePressLottie: () => void;
+  enableHeader: boolean;
 };
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
 export function SelectCell(props: Props) {
-  const { data, handlePressCell } = props;
+  const { data, handlePressCell, handlePressLottie, enableHeader } = props;
   const [answerSelected, setAnswerSelected] = useState("");
 
   const handleSelect = (word) => () => {
@@ -68,6 +72,7 @@ export function SelectCell(props: Props) {
 
   return (
     <View style={styles.container}>
+      {enableHeader && <Header handlePressLottie={handlePressLottie} />}
       {data?.words?.map((el, index) => renderItem(el, index))}
     </View>
   );
@@ -89,6 +94,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
   },
   container: {
+    width: screenWidth,
     zIndex: 1,
   },
   text: {

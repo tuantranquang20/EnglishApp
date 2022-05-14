@@ -16,3 +16,4 @@ export * from "./card/card";
 export * from "./fast-image/fast-image";
 export * from "./press-scale/press-scale";
 export * from "./loading/loading";
+export * from "./toast/toast";

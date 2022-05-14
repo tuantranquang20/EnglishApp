@@ -54,7 +54,7 @@ export class PressScale extends React.Component {
       toValue: props.activeScale,
       tension: tension,
       friction: friction,
-      useNativeDriver: props.useNativeDriver,
+      useNativeDriver: true,
     }).start();
 
     if (props.onPressIn) {
@@ -77,7 +77,7 @@ export class PressScale extends React.Component {
       toValue: props.defaultScale,
       tension: tension,
       friction: friction,
-      useNativeDriver: props.useNativeDriver,
+      useNativeDriver: true,
     }).start();
 
     if (props.onPressOut) {
@@ -97,7 +97,6 @@ PressScale.propTypes = {
   pressInFriction: PropTypes.number,
   pressOutTension: PropTypes.number,
   pressOutFriction: PropTypes.number,
-  useNativeDriver: PropTypes.bool,
 };
 
 PressScale.defaultProps = {
@@ -105,5 +104,4 @@ PressScale.defaultProps = {
   activeScale: 0.9,
   tension: 150,
   friction: 3,
-  useNativeDriver: true,
 };
