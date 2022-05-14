@@ -12,6 +12,8 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
+#import "RNSplashScreen.h" // here
+#import "EnglishApp-Swift.h"
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -54,7 +56,18 @@ static void InitializeFlipper(UIApplication *application) {
   [self.window makeKeyAndVisible];
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
+  Dynamic *t = [Dynamic new];
+    UIView *animationView = [t createAnimationViewWithRootView:rootView lottieName:@"splash"]; // change lottieName to your lottie files name
+    animationView.backgroundColor = [UIColor whiteColor]; // change backgroundColor
 
+    // register LottieSplashScreen to RNSplashScreen
+    [RNSplashScreen showLottieSplash:animationView inRootView:rootView];
+
+    // play
+    [t playWithAnimationView:animationView];
+
+    // If you want the animation layout to be forced to remove when hide is called, use this code
+    // [RNSplashScreen setAnimationFinished:true];
   return YES;
 }
 

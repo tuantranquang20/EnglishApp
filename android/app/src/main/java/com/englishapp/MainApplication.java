@@ -3,25 +3,26 @@ package com.englishapp;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
+
 import androidx.annotation.NonNull;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import net.no_mad.tts.TextToSpeechPackage;
-import com.wenkesj.voice.VoicePackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
+import com.facebook.react.bridge.JSIModulePackage;
 import com.facebook.soloader.SoLoader;
+import com.swmansion.reanimated.ReanimatedJSIModulePackage;
 
-import expo.modules.ApplicationLifecycleDispatcher;
-import expo.modules.ReactNativeHostWrapper;
+ import org.devio.rn.splashscreen.SplashScreenReactPackage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import com.facebook.react.bridge.JSIModulePackage;
-import com.swmansion.reanimated.ReanimatedJSIModulePackage;
+import expo.modules.ApplicationLifecycleDispatcher;
+import expo.modules.ReactNativeHostWrapper;
+
 
 public class MainApplication extends Application implements ReactApplication {
   private final ReactNativeHost mReactNativeHost = new ReactNativeHostWrapper(
@@ -40,6 +41,7 @@ public class MainApplication extends Application implements ReactApplication {
         // Packages that cannot be autolinked yet can be added manually here, for example:
         // packages.add(new MyReactNativePackage());
         // packages.add(new MyReactNativePackage());
+         new SplashScreenReactPackage();  //here
         return packages;
       }
 

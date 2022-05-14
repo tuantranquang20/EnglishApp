@@ -1092,6 +1092,8 @@ PODS:
   - React-jsinspector (0.67.2)
   - React-logger (0.67.2):
     - glog
+  - react-native-lottie-splash-screen (0.1.14):
+    - React
   - react-native-safe-area-context (3.1.8):
     - React-Core
   - react-native-voice (1.1.9):
@@ -1292,6 +1294,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-lottie-splash-screen (from `../node_modules/react-native-lottie-splash-screen`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-voice (from `../node_modules/@react-native-community/voice`)"
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1422,6 +1425,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-lottie-splash-screen:
+    :path: "../node_modules/react-native-lottie-splash-screen"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-voice:
@@ -1546,6 +1551,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 52beb652bbc61201bd70cbe4f0b8edb607e8da4f
   React-jsinspector: 595f76eba2176ebd8817a1fffd47b84fbdab9383
   React-logger: 23de8ea0f44fa00ee77e96060273225607fd4d78
+  react-native-lottie-splash-screen: 3bc897a60c7d37edaebc2a995f2f40c9a3259fa0
   react-native-safe-area-context: 79fea126c6830c85f65947c223a5e3058a666937
   react-native-voice: eb6b7c7f752310f72a6f4d64c2fba6ee724d6604
   React-perflogger: 3c9bb7372493e49036f07a82c44c8cf65cbe88db
@@ -1581,4 +1587,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: d4499e2c4e3f38b62f75cd80c65a7084487ab1e4
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

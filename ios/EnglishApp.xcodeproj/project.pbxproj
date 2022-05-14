@@ -11,6 +11,8 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		22461077282F5F22006AA18F /* Dynamic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22461076282F5F22006AA18F /* Dynamic.swift */; };
+		227747C9282F681300541733 /* splash.json in Resources */ = {isa = PBXBuildFile; fileRef = 227747C8282F681300541733 /* splash.json */; };
 		22E4C0F3280D5FC0003F15B1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 22E4C0F2280D5FC0003F15B1 /* GoogleService-Info.plist */; };
 		2A50106FAD5A4838A1BA0752 /* Quicksand-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4FC1A52267D544C9956CAE4E /* Quicksand-Bold.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -56,21 +58,23 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = EnglishApp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = EnglishApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = EnglishApp/main.m; sourceTree = "<group>"; };
+		22461076282F5F22006AA18F /* Dynamic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dynamic.swift; sourceTree = "<group>"; };
+		227747C8282F681300541733 /* splash.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = splash.json; sourceTree = "<group>"; };
 		22E4C0F2280D5FC0003F15B1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* EnglishApp-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EnglishApp-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* EnglishApp-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "EnglishApp-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		301BE758935A381A571F5B21 /* libPods-EnglishApp-EnglishAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-EnglishApp-EnglishAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		301D4C4A7DB345BA94968597 /* Quicksand-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Light.ttf"; path = "../assets/fonts/Quicksand-Light.ttf"; sourceTree = "<group>"; };
+		301D4C4A7DB345BA94968597 /* Quicksand-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Light.ttf"; path = "../assets/fonts/Quicksand-Light.ttf"; sourceTree = "<group>"; };
 		32B04630CC446F19212E357A /* Pods-EnglishApp-EnglishAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EnglishApp-EnglishAppTests.release.xcconfig"; path = "Target Support Files/Pods-EnglishApp-EnglishAppTests/Pods-EnglishApp-EnglishAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		32BB11C19824A84866ED4603 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-EnglishApp-EnglishAppTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		3ECD546F3378FD459F4E82B0 /* Pods-EnglishApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EnglishApp.debug.xcconfig"; path = "Target Support Files/Pods-EnglishApp/Pods-EnglishApp.debug.xcconfig"; sourceTree = "<group>"; };
 		4D40708BE521DBE7DC6E68C8 /* Pods-EnglishApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EnglishApp.release.xcconfig"; path = "Target Support Files/Pods-EnglishApp/Pods-EnglishApp.release.xcconfig"; sourceTree = "<group>"; };
-		4FC1A52267D544C9956CAE4E /* Quicksand-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Bold.ttf"; path = "../assets/fonts/Quicksand-Bold.ttf"; sourceTree = "<group>"; };
-		761614FA18634C0D8155E043 /* Quicksand-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Regular.ttf"; path = "../assets/fonts/Quicksand-Regular.ttf"; sourceTree = "<group>"; };
+		4FC1A52267D544C9956CAE4E /* Quicksand-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Bold.ttf"; path = "../assets/fonts/Quicksand-Bold.ttf"; sourceTree = "<group>"; };
+		761614FA18634C0D8155E043 /* Quicksand-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Regular.ttf"; path = "../assets/fonts/Quicksand-Regular.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = EnglishApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8D3D2E99D3814D73E5353ACB /* Pods-EnglishApp-EnglishAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EnglishApp-EnglishAppTests.debug.xcconfig"; path = "Target Support Files/Pods-EnglishApp-EnglishAppTests/Pods-EnglishApp-EnglishAppTests.debug.xcconfig"; sourceTree = "<group>"; };
-		929AF8B97409435DBF698F2A /* Quicksand-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Medium.ttf"; path = "../assets/fonts/Quicksand-Medium.ttf"; sourceTree = "<group>"; };
-		9B5BA538CB634C02B01043D2 /* Quicksand-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-SemiBold.ttf"; path = "../assets/fonts/Quicksand-SemiBold.ttf"; sourceTree = "<group>"; };
+		929AF8B97409435DBF698F2A /* Quicksand-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Medium.ttf"; path = "../assets/fonts/Quicksand-Medium.ttf"; sourceTree = "<group>"; };
+		9B5BA538CB634C02B01043D2 /* Quicksand-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-SemiBold.ttf"; path = "../assets/fonts/Quicksand-SemiBold.ttf"; sourceTree = "<group>"; };
 		B5CD00143C8AA5EF71C17FFB /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-EnglishApp/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		E9A75AE3274586F80062D054 /* EnglishApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EnglishApp-Bridging-Header.h"; sourceTree = "<group>"; };
 		EADEA568884090C1B008E181 /* libPods-EnglishApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-EnglishApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -165,7 +169,6 @@
 				9B5BA538CB634C02B01043D2 /* Quicksand-SemiBold.ttf */,
 			);
 			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 		5689842C06F17459227A49DA /* EnglishApp */ = {
@@ -206,6 +209,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				227747C8282F681300541733 /* splash.json */,
+				22461076282F5F22006AA18F /* Dynamic.swift */,
 				22E4C0F2280D5FC0003F15B1 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* EnglishApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -391,6 +396,7 @@
 				2A50106FAD5A4838A1BA0752 /* Quicksand-Bold.ttf in Resources */,
 				3687CCB474AB41EBAF66CEC5 /* Quicksand-Light.ttf in Resources */,
 				A362A81DC35F498C85EC779D /* Quicksand-Medium.ttf in Resources */,
+				227747C9282F681300541733 /* splash.json in Resources */,
 				C464C3DDE59A492E8EC76D19 /* Quicksand-Regular.ttf in Resources */,
 				43FF8B8E57FA4065B8F4ED53 /* Quicksand-SemiBold.ttf in Resources */,
 			);
@@ -638,6 +644,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				22461077282F5F22006AA18F /* Dynamic.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				566F80C1685020AB2B9D9743 /* ExpoModulesProvider.swift in Sources */,
 			);

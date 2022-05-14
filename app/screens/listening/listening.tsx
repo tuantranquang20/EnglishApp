@@ -156,7 +156,7 @@ export function ListeningScreen() {
           showsHorizontalScrollIndicator={false}
           scrollEnabled={false}
         >
-          {dataOfLesson.map((el, index) => {
+          {dataOfLesson?.map((el, index) => {
             switch (el.type) {
               case "douLingo":
                 return (
