@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: isIOS ? 0 : 3,
     marginBottom: 2,
-    marginHorizontal: 8,
+    marginHorizontal: 15,
     marginTop: 15,
     paddingHorizontal: 14,
     padding: 0,

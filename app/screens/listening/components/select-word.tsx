@@ -28,6 +28,6 @@ export function SelectWord(props: Props) {
 const styles = StyleSheet.create({
   question: {
     fontSize: 20,
-    marginLeft: 10,
+    marginLeft: 15,
   },
 });

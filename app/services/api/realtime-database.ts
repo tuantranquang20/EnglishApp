@@ -48,8 +48,28 @@ export const createSpeaking = async () => {
   console.log(result);
 };
 
-export const getDataLesson = async (callback) => {
-  await ref("reading").on("value", (snapshot) =>
+export const getLearningLesson = async (callback) => {
+  await database()
+    .ref("englishApp")
+    .child("userLearning")
+    .child("EcopI8sSbQPKFQpVdrS1ebbGNBF2")
+    .child("reading")
+    .on("value", (snapshot) => {
+      callback(snapshot.val());
+    });
+};
+
+export const getDataLesson = async (data, callback) => {
+  await ref(data?.collection).on("value", (snapshot) =>
     callback(convertObjectToArray(snapshot.val()))
   );
+};
+
+export const updateLearningLesson = async () => {
+  await database()
+    .ref("englishApp")
+    .child("userLearning")
+    .child("EcopI8sSbQPKFQpVdrS1ebbGNBF2")
+    .child("reading")
+    .set({ lessonOne: 10 });
 };

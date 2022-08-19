@@ -1,6 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import {
+  ExerciseScreen,
   GrammarScreen,
   HomeScreen,
   ListeningScreen,
@@ -49,6 +50,10 @@ export function HomeStack() {
       <Stack.Screen
         name={RouteName.LessonSpeakingScreen}
         component={LessonSpeakingScreen}
+      />
+      <Stack.Screen
+        name={RouteName.ExerciseScreen}
+        component={ExerciseScreen}
       />
     </Stack.Navigator>
   );

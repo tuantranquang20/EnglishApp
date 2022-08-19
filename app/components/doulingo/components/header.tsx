@@ -61,6 +61,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: typography.semiBold,
     fontSize: 24,
-    paddingLeft: 10,
+    paddingLeft: 15,
   },
 });

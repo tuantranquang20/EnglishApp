@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import FlipCard from "~app/components/flip-card/flip-card";
 import ReanimatedCarousel from "~app/components/reanimated-carousel";
@@ -8,16 +8,20 @@ import { FrontCard } from "./components/front-card";
 import { color } from "~app/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getDataFromRealTimeDB } from "~app/services/api/realtime-database";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { COLLECTION } from "~app/constants/constants";
 import { ICardRef } from "./interface";
+import { Progress, Screen, Text } from "~app/components";
+import { Footer } from "./components/footer";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export function ReadingScreen() {
   const insets = useSafeAreaInsets();
   const [dataOfLesson, setDataOfLesson] = useState([]);
+  const [currentItem, setCurrentItem] = useState(0);
   const { params } = useRoute();
+  const navigation = useNavigation();
 
   const initTts = async () => {
     const voices = await Tts.voices();
@@ -77,15 +81,24 @@ export function ReadingScreen() {
     );
   };
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 50 }]}>
+    <Screen
+      unsafe
+      preset="fixed"
+      statusBar="dark-content"
+      style={styles.container}
+    >
+      <Progress
+        style={[styles.center, { marginTop: insets.top + 20 }]}
+        width={300}
+        height={5}
+        progress={currentItem / (dataOfLesson.length - 1)}
+        indeterminate={false}
+      />
       <ReanimatedCarousel
         loop={false}
-        style={{
-          width: screenWidth,
-          height: screenHeight,
-        }}
+        style={styles.ctn}
         width={300}
-        height={500}
+        height={600}
         data={dataOfLesson || []}
         modeConfig={{
           parallaxScrollingOffset: 0,
@@ -95,20 +108,29 @@ export function ReadingScreen() {
         panGestureHandlerProps={{
           activeOffsetX: [-10, 10],
         }}
-        mode="horizontal-stack"
+        onProgressChange={(_, absoluteProgress: number) => {
+          setCurrentItem(absoluteProgress);
+        }}
+        mode="vertical-stack"
         scrollAnimationDuration={300}
         renderItem={renderItem}
         windowSize={10}
       />
-    </View>
+      <Footer />
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  center: {
+    alignSelf: "center",
+  },
   container: {
-    alignItems: "center",
     backgroundColor: color.palette.white,
     flex: 1,
-    justifyContent: "center",
+  },
+  ctn: {
+    marginTop: 5,
+    width: screenWidth,
   },
 });

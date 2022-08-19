@@ -194,7 +194,7 @@ const SortableWord = ({
                   );
                   translation.x.value = offset.x.value;
                   translation.y.value = offset.y.value;
-                }, 16);
+                }, 100);
               }}
             >
               <Animated.View>{children}</Animated.View>

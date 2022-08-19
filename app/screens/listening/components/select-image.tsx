@@ -72,12 +72,10 @@ const styles = StyleSheet.create({
     backgroundColor: color.palette.white,
     borderRadius: 20,
     elevation: isIOS ? 0 : 3,
-    marginBottom: 2,
-    marginHorizontal: 8,
+    marginHorizontal: 15,
     marginTop: 15,
-    paddingHorizontal: 14,
     padding: 0,
-    paddingVertical: 20,
+    paddingVertical: 15,
     shadowColor: color.palette.black,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.2,
@@ -91,7 +89,7 @@ const styles = StyleSheet.create({
   },
   img: {
     alignSelf: "center",
-    height: 150,
+    aspectRatio: 1,
     width: 150,
   },
   vImage: {

@@ -1,6 +1,7 @@
 export enum AppStacks {
   BottomTab = "BottomTab",
   HomeStack = "HomeStack",
+  AuthStack = "AuthStack",
 }
 export enum AppBottomTab {
   Home = "Home",
@@ -19,13 +20,19 @@ export enum RouteName {
   LessonListingScreen = "LessonListingScreen",
   LessonSpeakingScreen = "LessonSpeakingScreen",
   LessonGrammarScreen = "LessonGrammarScreen",
+  LoginScreen = "LoginScreen",
+  RegisterScreen = "RegisterScreen",
+  ExerciseScreen = "ExerciseScreen",
 }
 export type NavigatorParamList = {
-  [RouteName.HomeScreen]: undefined
-  [RouteName.ProfileScreen]: undefined
-  [RouteName.SaveScreen]: undefined
-  [RouteName.ReadingScreen]: undefined
-  [RouteName.SpeakingScreen]: undefined
-  [RouteName.ListeningScreen]: undefined
-  [RouteName.GrammarScreen]: undefined
-}
+  [RouteName.HomeScreen]: undefined;
+  [RouteName.ProfileScreen]: undefined;
+  [RouteName.SaveScreen]: undefined;
+  [RouteName.ReadingScreen]: undefined;
+  [RouteName.SpeakingScreen]: undefined;
+  [RouteName.ListeningScreen]: undefined;
+  [RouteName.GrammarScreen]: undefined;
+  [RouteName.LoginScreen]: undefined;
+  [RouteName.RegisterScreen]: undefined;
+  [RouteName.ExerciseScreen]: undefined;
+};

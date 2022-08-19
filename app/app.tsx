@@ -12,6 +12,7 @@ import { RootStore, RootStoreProvider, setupRootStore } from "./models";
 import { ToggleStorybook } from "../storybook/toggle-storybook";
 import { ErrorBoundary } from "./screens/error/error-boundary";
 import SplashScreen from "react-native-lottie-splash-screen";
+import 'react-native-gesture-handler';
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE";
 function App() {
   const [rootStore, setRootStore] = React.useState<RootStore | undefined>(

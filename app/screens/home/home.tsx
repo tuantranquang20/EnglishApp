@@ -9,22 +9,26 @@ const learn = [
   {
     title: "Reading",
     icon: require("../../../assets/lotties/book.json"),
-    screen: RouteName.ReadingScreen,
+    screen: RouteName.LessonReadingScreen,
+    des: "Reading",
   },
   {
     title: "Listening",
     icon: require("../../../assets/lotties/headphone1.json"),
-    screen: RouteName.ListeningScreen,
+    screen: RouteName.LessonListingScreen,
+    des: "Listening",
   },
   {
     title: "Speaking",
     icon: require("../../../assets/lotties/speaking.json"),
-    screen: RouteName.SpeakingScreen,
+    screen: RouteName.LessonSpeakingScreen,
+    des: "Speaking",
   },
   {
     title: "Grammar",
     icon: require("../../../assets/lotties/grammar.json"),
-    screen: RouteName.GrammarScreen,
+    screen: RouteName.LessonGrammarScreen,
+    des: "Grammar",
   },
 ];
 export function HomeScreen() {

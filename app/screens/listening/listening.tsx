@@ -91,8 +91,8 @@ export function ListeningScreen() {
     setAnswered(word);
   };
   const handlePressDouLingo = (word) => {
-    readText(word);
     setAnswered(word);
+    readText(word);
   };
   const handlePressLottie = (answer) => () => {
     readText(answer);
@@ -116,16 +116,10 @@ export function ListeningScreen() {
     switch (dataOfLesson[currentIndex]?.type) {
       case "douLingo":
         const wordRef = duoDragDropRef.current?.getAnsweredWords();
-        console.log("wordRef", wordRef.join(" "));
-        // console.log("getWords", duoDragDropRef.current.getWords());
-        // console.log("wordRef", wordRef);
-        // console.log("duoDragDropRef.current", duoDragDropRef.current);
-        // isEqual(wordRef, data.answer);
-        // setAnsweredWords(duoDragDropRef.current?.getAnsweredWords() || []);
-        console.log("douLingo");
+        handleCheckAnswer(isEqual(wordRef, dataOfLesson[currentIndex].answer));
         break;
       case "selectCell":
-        console.log("selectCell");
+        handleCheckAnswer(dataOfLesson[currentIndex]?.rawAnswer === answered);
         break;
       case "selectImage":
         handleCheckAnswer(dataOfLesson[currentIndex]?.rawAnswer === answered);
@@ -177,9 +171,6 @@ export function ListeningScreen() {
                         handlePressDouLingo={handlePressDouLingo}
                         textStyle={styles.word}
                       />
-                    )}
-                    renderPlaceholder={({ style }) => (
-                      <Placeholder style={[style, { borderRadius: 5 }]} />
                     )}
                     renderLines={(props) => (
                       <Lines {...props} containerStyle={styles.lines} />

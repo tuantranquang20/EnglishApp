@@ -1,12 +1,17 @@
-import React from "react"
-import { useColorScheme } from "react-native"
-import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
-import { BottomTab } from "./bottom-tab"
-import { AppStacks } from "./constants"
+import React from "react";
+import { useColorScheme } from "react-native";
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+} from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { navigationRef, useBackButtonHandler } from "./navigation-utilities";
+import { BottomTab } from "./bottom-tab";
+import { AppStacks } from "./constants";
+import { AuthStack } from "./stack/auth-stack";
 
-const Stack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
   return (
@@ -16,15 +21,17 @@ const AppStack = () => {
       }}
     >
       <Stack.Screen name={AppStacks.BottomTab} component={BottomTab} />
+      <Stack.Screen name={AppStacks.AuthStack} component={AuthStack} />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
-interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
+interface NavigationProps
+  extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 export const AppNavigator = (props: NavigationProps) => {
-  const colorScheme = useColorScheme()
-  useBackButtonHandler(canExit)
+  const colorScheme = useColorScheme();
+  useBackButtonHandler(canExit);
   return (
     <NavigationContainer
       ref={navigationRef}
@@ -33,9 +40,9 @@ export const AppNavigator = (props: NavigationProps) => {
     >
       <AppStack />
     </NavigationContainer>
-  )
-}
+  );
+};
 
-AppNavigator.displayName = "AppNavigator"
-const exitRoutes = ["welcome"]
-export const canExit = (routeName: string) => exitRoutes.includes(routeName)
+AppNavigator.displayName = "AppNavigator";
+const exitRoutes = ["welcome"];
+export const canExit = (routeName: string) => exitRoutes.includes(routeName);

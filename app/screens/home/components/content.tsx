@@ -1,35 +1,40 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native"
-import React, { useState } from "react"
-import { Button, Card, Text } from "~app/components"
-import AnimatedLottieView from "lottie-react-native"
-import { AnimatedSection, useCollapsible } from "~app/components/collapsible"
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
-import { navigate } from "~app/navigators"
-import { AnimationObject } from "react-native-reanimated/lib/types/lib/reanimated2/commonTypes"
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { Button, Card, Text } from "~app/components";
+import AnimatedLottieView from "lottie-react-native";
+import { AnimatedSection, useCollapsible } from "~app/components/collapsible";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { navigate } from "~app/navigators";
+import { AnimationObject } from "react-native-reanimated/lib/types/lib/reanimated2/commonTypes";
 
-const LottieViewAnimated = Animated.createAnimatedComponent(AnimatedLottieView)
+const LottieViewAnimated = Animated.createAnimatedComponent(AnimatedLottieView);
 
 type Props = {
   item: {
-    title: string
-    icon: string | AnimationObject
-    screen: string
-  }
-}
+    title: string;
+    icon: string | AnimationObject;
+    screen: string;
+    des: string;
+  };
+};
 
 export function Content(props: Props) {
-  const { item } = props
-  const { animatedHeight, height, onPress, onLayout, state } = useCollapsible()
-  const [toggle, setToggle] = useState(false)
-  const toggleValue = useSharedValue(0)
+  const { item } = props;
+  const { animatedHeight, height, onPress, onLayout, state } = useCollapsible();
+  const [toggle, setToggle] = useState(false);
+  const toggleValue = useSharedValue(0);
   const handlePress = () => {
-    toggleValue.value = toggle ? 0 : 180
-    setToggle(!toggle)
-    onPress()
-  }
+    toggleValue.value = toggle ? 0 : 180;
+    setToggle(!toggle);
+    onPress();
+  };
   const handleNavigate = (screen) => () => {
-    navigate(screen)
-  }
+    navigate(screen);
+  };
 
   const spin = useAnimatedStyle(() => {
     return {
@@ -40,18 +45,26 @@ export function Content(props: Props) {
           }),
         },
       ],
-    }
-  })
+    };
+  });
 
   return (
     <Card style={[styles.row, styles.card]}>
       <View style={styles.overflow}>
-        <TouchableOpacity style={[styles.row, styles.justifySpace]} onPress={handlePress}>
+        <TouchableOpacity
+          style={[styles.row, styles.justifySpace]}
+          onPress={handlePress}
+        >
           <View style={[styles.row, styles.title]}>
-            <AnimatedLottieView style={styles.icon} autoPlay loop source={item.icon} />
-            <View>
+            <AnimatedLottieView
+              style={styles.icon}
+              autoPlay
+              loop
+              source={item.icon}
+            />
+            <View style={styles.ml}>
               <Text preset="bold">{item.title}</Text>
-              <Text>aaabbb</Text>
+              <Text style={styles.des}>{item?.des}</Text>
             </View>
           </View>
           <LottieViewAnimated
@@ -61,14 +74,21 @@ export function Content(props: Props) {
             source={require("../../../../assets/lotties/arrow-down.json")}
           />
         </TouchableOpacity>
-        <AnimatedSection animatedHeight={animatedHeight} onLayout={onLayout} state={state}>
+        <AnimatedSection
+          animatedHeight={animatedHeight}
+          onLayout={onLayout}
+          state={state}
+        >
           <View style={styles.textContainer}>
-            <Button onPress={handleNavigate(item.screen)} text={"text"} />
+            <Button
+              onPress={handleNavigate(item.screen)}
+              text={"Go to lesson!"}
+            />
           </View>
         </AnimatedSection>
       </View>
     </Card>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -90,6 +110,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  ml: {
+    marginLeft: 10,
+    marginTop: 10,
+  },
   overflow: {
     flex: 1,
   },
@@ -102,4 +126,7 @@ const styles = StyleSheet.create({
   title: {
     alignItems: "center",
   },
-})
+  des: {
+    fontSize: 13,
+  },
+});

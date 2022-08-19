@@ -1,7 +1,7 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import Voice from "@react-native-community/voice";
-import { Screen, Text } from "~app/components";
+import { Card, Screen, Text } from "~app/components";
 import AnimatedLottieView from "lottie-react-native";
 import Header from "~app/components/doulingo/components/header";
 import { createSpeaking } from "~app/services/api/realtime-database";
@@ -66,19 +66,24 @@ export function SpeakingScreen() {
   }, []);
 
   return (
-    <Screen>
+    <Screen
+      back
+      preset="fixed"
+      statusBar="dark-content"
+    >
       <Header />
-      <Text text={result} />
-
-      <TouchableOpacity onPress={startRecording}>
-        <AnimatedLottieView
-          autoPlay={true}
-          style={styles.speakIcon}
-          speed={1}
-          loop={true}
-          source={require("../../assets/lotties/microphone.json")}
-        />
-      </TouchableOpacity>
+      <Card style={styles.container}>
+        <Text preset="bold" text={"Hello, how are you?"} style={styles.text} />
+        <TouchableOpacity onPress={startRecording}>
+          <AnimatedLottieView
+            autoPlay={true}
+            style={styles.speakIcon}
+            speed={1}
+            loop={true}
+            source={require("../../assets/lotties/microphone.json")}
+          />
+        </TouchableOpacity>
+      </Card>
     </Screen>
   );
 }
@@ -87,5 +92,11 @@ const styles = StyleSheet.create({
   speakIcon: {
     height: 70,
     width: 70,
+  },
+  container: {
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 20,
   },
 });

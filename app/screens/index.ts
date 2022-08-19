@@ -9,4 +9,5 @@ export * from "./grammar/grammar"
 export * from "./listening/listening"
 export * from "./reading/reading"
 export * from "./speaking/speaking"
+export * from "./reading/exercise-screen"
 // export other screens here
