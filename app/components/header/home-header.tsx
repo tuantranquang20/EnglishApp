@@ -1,20 +1,20 @@
-import React from "react";
-import { HeaderProps } from "./header.props";
+import React from "react"
+import { HeaderProps } from "./header.props"
 
-import { Card } from "../card/card";
-import { Text } from "../text/text";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import { color } from "~app/theme";
-import AnimatedLottieView from "lottie-react-native";
-import { useNavigation } from "@react-navigation/native";
-import { useStores } from "~app/models";
+import { Card } from "../card/card"
+import { Text } from "../text/text"
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native"
+import { color } from "~app/theme"
+import AnimatedLottieView from "lottie-react-native"
+import { useNavigation } from "@react-navigation/native"
+import { useStores } from "~app/models"
 
 export function HomeHeader(props: HeaderProps) {
-  const navigation = useNavigation();
-  const { user } = useStores();
+  const navigation = useNavigation()
+  const { user } = useStores()
   const onPress = () => {
-    navigation.openDrawer();
-  };
+    navigation.openDrawer()
+  }
   return (
     <Card style={styles.container}>
       <View style={styles.row}>
@@ -28,20 +28,17 @@ export function HomeHeader(props: HeaderProps) {
           />
         </TouchableOpacity>
         <Image
-          resizeMode={"contain"}
+          resizeMode={"cover"}
           style={styles.img}
           source={require("../../../../assets/images/avt.jpeg")}
         />
       </View>
       <View style={styles.footer}>
-        <Text
-          preset="header"
-          text={`Hello ${user?.userInformation?.displayName || "Grey"},`}
-        />
+        <Text preset="header" text={`Hello ${user?.userInformation?.displayName || "Grey"},`} />
         <Text preset="header">Continue to English!</Text>
       </View>
     </Card>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -58,6 +55,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 40,
     height: 250,
     marginHorizontal: 0,
+    paddingTop: 10
   },
   footer: {
     flex: 1,
@@ -67,7 +65,7 @@ const styles = StyleSheet.create({
     width: 35,
   },
   img: {
-    borderRadius: 10,
+    borderRadius: 100,
     height: 45,
     width: 45,
   },
@@ -76,4 +74,4 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
   },
-});
+})

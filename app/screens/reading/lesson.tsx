@@ -1,66 +1,54 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import React, { useCallback, useEffect, useState } from "react"
+import { Dimensions, StyleSheet } from "react-native"
 import {
   getDataLesson,
   getLearningLesson,
   updateLearningLesson,
-} from "~app/services/api/realtime-database";
-import {
-  Card,
-  PercentageCircle,
-  PressScale,
-  Screen,
-  Text,
-} from "~app/components";
-import AnimatedLottieView from "lottie-react-native";
-import { color, typography } from "~app/theme";
-import { navigate } from "~app/navigators";
-import { RouteName } from "~app/navigators/constants";
-import Animated, {
-  interpolateNode,
-  Extrapolate,
-  Value,
-} from "react-native-reanimated";
-import { onScrollEvent } from "~app/utils/animated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { COLLECTION } from "~app/constants/constants";
+} from "~app/services/api/realtime-database"
+import { Card, PercentageCircle, PressScale, Screen, Text } from "~app/components"
+import AnimatedLottieView from "lottie-react-native"
+import { color, typography } from "~app/theme"
+import { navigate } from "~app/navigators"
+import { RouteName } from "~app/navigators/constants"
+import Animated, { interpolateNode, Extrapolate, Value } from "react-native-reanimated"
+import { onScrollEvent } from "~app/utils/animated"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { COLLECTION } from "~app/constants/constants"
+import sortBy from "lodash/sortBy"
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get("window")
 
 export function Lesson() {
-  const y = React.useRef(new Value<number>(0)).current;
-  const [lessons, setLessons] = useState([]);
-  const insets = useSafeAreaInsets();
-
+  const y = React.useRef(new Value<number>(0)).current
+  const [lessons, setLessons] = useState([])
+  const insets = useSafeAreaInsets()
   const getAllData = useCallback(async () => {
-    await getDataLesson(
-      { collection: COLLECTION.reading },
-      async (data) => {
-        await getLearningLesson((progress) => {
-          const result = data.map((item) => ({
-            ...item,
-            percent: progress?.[item?.key] ?? 0,
-          }));
-          if (result.length) {
-            setLessons(result);
-          }
-        });
-      }
-    );
-  }, []);
+    await getDataLesson({ collection: COLLECTION.reading }, async (data) => {
+      await getLearningLesson((progress) => {
+        const result = data.map((item) => ({
+          ...item,
+          percent: progress?.[item?.key] ?? 0,
+        }))
+        if (result.length) {
+          const order = sortBy(result, ["index"])
+          setLessons(order)
+        }
+      })
+    })
+  }, [])
 
   useEffect(() => {
-    getAllData();
-  }, []);
+    getAllData()
+  }, [])
 
   const opacity = interpolateNode(y, {
     inputRange: [0, width - insets.top],
     outputRange: [1, 0],
     extrapolateRight: Extrapolate.CLAMP,
-  });
+  })
   const handlePress = (key) => () => {
-    navigate(RouteName.ReadingScreen, key);
-  };
+    navigate(RouteName.ReadingScreen, key)
+  }
 
   const renderItem = ({ item }) => {
     return (
@@ -70,14 +58,12 @@ export function Lesson() {
           <PercentageCircle radius={17} percent={item.percent} color={color.palette.orangeDarker} />
         </Card>
       </PressScale>
-    );
-  };
+    )
+  }
 
   return (
     <Screen back preset="fixed" statusBar="dark-content">
-      <Animated.View
-        style={[styles.bg, { paddingTop: insets.top }, { opacity: opacity }]}
-      >
+      <Animated.View style={[styles.bg, { paddingTop: insets.top }, { opacity: opacity }]}>
         <AnimatedLottieView
           style={styles.icon}
           autoPlay={true}
@@ -93,7 +79,7 @@ export function Lesson() {
         keyExtractor={(_, index) => `k-${index}`}
       />
     </Screen>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -131,4 +117,4 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
-});
+})

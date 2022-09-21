@@ -36,6 +36,7 @@
     "@react-native-firebase/database": "^14.9.4",
     "@react-native-firebase/firestore": "^14.9.4",
     "@react-native-firebase/storage": "^14.9.4",
+    "@react-native-firebase/messaging": "^14.9.4",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/drawer": "^6.4.1",
     "@react-navigation/native": "~6.0.1",

@@ -87,18 +87,11 @@ export function ReadingScreen() {
       statusBar="dark-content"
       style={styles.container}
     >
-      <Progress
-        style={[styles.center, { marginTop: insets.top + 20 }]}
-        width={300}
-        height={5}
-        progress={currentItem / (dataOfLesson.length - 1)}
-        indeterminate={false}
-      />
       <ReanimatedCarousel
         loop={false}
         style={styles.ctn}
         width={300}
-        height={600}
+        height={560}
         data={dataOfLesson || []}
         modeConfig={{
           parallaxScrollingOffset: 0,
@@ -116,15 +109,12 @@ export function ReadingScreen() {
         renderItem={renderItem}
         windowSize={10}
       />
-      <Footer />
+      <Footer params={params}/>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  center: {
-    alignSelf: "center",
-  },
   container: {
     backgroundColor: color.palette.white,
     flex: 1,

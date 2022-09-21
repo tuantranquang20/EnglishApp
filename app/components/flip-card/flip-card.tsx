@@ -1,7 +1,9 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useRef, useImperativeHandle } from "react"
 import { View, Animated, PanResponder, Platform, StyleSheet } from "react-native"
 import PropTypes from "prop-types"
 
+// eslint-disable-next-line react/display-name
 const FlipCard = React.forwardRef((props, ref) => {
   const width = useRef(Math.floor(props.width)).current
   const height = useRef(Math.floor(props.height)).current

@@ -19,12 +19,6 @@ const learn = [
     des: "Listening",
   },
   {
-    title: "Speaking",
-    icon: require("../../../assets/lotties/speaking.json"),
-    screen: RouteName.LessonSpeakingScreen,
-    des: "Speaking",
-  },
-  {
     title: "Grammar",
     icon: require("../../../assets/lotties/grammar.json"),
     screen: RouteName.LessonGrammarScreen,
@@ -44,6 +38,6 @@ export function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: 100,
+    paddingBottom: 15,
   },
 });
