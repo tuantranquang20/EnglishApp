@@ -1,101 +1,87 @@
 import { Image, StyleSheet, View, Animated as Ani, Dimensions } from "react-native"
-import React, { useCallback, useEffect, useState } from "react"
-import { Card, PressScale, Screen, Text } from "~app/components"
+import React, { useMemo, useState } from "react"
+import { Card, FImage, PressScale, Screen, Text } from "~app/components"
 import { color } from "~app/theme"
 import Animated, {
-  interpolateColor,
   scrollTo,
   useAnimatedRef,
-  useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  withTiming,
 } from "react-native-reanimated"
 import { isIOS } from "~app/utils/helper"
-import { COLLECTION } from "~app/constants/constants"
-import { useRoute } from "@react-navigation/native"
-import { getDataFromRealTimeDB } from "~app/services/api/realtime-database"
-import Toast from "react-native-toast-message"
-import { toastConfig } from "~app/utils/toast"
+import { useNavigation, useRoute } from "@react-navigation/native"
+import { RouteName } from "~app/navigators/constants"
 
-const { width, height } = Dimensions.get("screen")
+const { width } = Dimensions.get("screen")
 const AnimatedText = Animated.createAnimatedComponent(Text)
 
 export function ExerciseScreen() {
-  const [answerSelected, setAnswerSelected] = useState("")
   const aref = useAnimatedRef()
-  const { params } = useRoute()
   const [dataOfLesson, setDataOfLesson] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const scroll = useSharedValue(0)
+  const navigation = useNavigation()
+  const { params } = useRoute()
+  const [result, setResult] = useState([])
 
   useDerivedValue(() => {
     scrollTo(aref, scroll.value * width, 0, true)
   })
 
-  const testFirebase = useCallback(async () => {}, [])
-
-  const handleCheckAnswer = (isTrue) => {
-    if (isTrue) {
-      Toast.show({
-        type: "success",
-        text1: "Nice!",
-        text2: "Next",
-      })
-    } else {
-      Toast.show({
-        type: "error",
-        text1: "Sad!",
-        text2: "Keep going",
-      })
+  const shuffle = (array) => {
+    if (!array?.length) {
+      return []
     }
+    let currentIndex = array?.length
+    let randomIndex = 0
+
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex)
+      currentIndex--
+      ;[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+    }
+
+    return array
   }
 
-  const nextQuestion = () => {
+  const answer = useMemo(() => params.data?.map((el) => el.word), [])
+
+  const randomAnswer = useMemo(() => {
+    return answer?.map((el, index) => {
+      const answerUnique = [...answer]
+      answerUnique.splice(index, 1)
+      const random1 = answerUnique?.length - 1
+      const answerRandom1 = answerUnique[random1]
+      answerUnique.splice(random1, 1)
+      const answerRandom2 = answerUnique[answerUnique?.length - 1]
+
+      return [el, answerRandom1, answerRandom2]
+    })
+  }, [])
+
+  const nextQuestion = (word) => {
+    if (currentIndex === params?.data?.length - 1) {
+      return navigation.navigate(RouteName.FinishScreen, {
+        result: [...result, word],
+        answer,
+        screen: "exercise",
+        lesson: params?.params
+      })
+    }
+    setResult([...result, word])
     setCurrentIndex(currentIndex + 1)
     scroll.value = scroll.value + 1
-    setAnswerSelected("")
     if (scroll.value >= dataOfLesson.length - 1) scroll.value = 0
   }
 
   const handleSelect = (word) => () => {
-    if (word !== answerSelected) {
-      setAnswerSelected(word)
-      handleCheckAnswer(true)
-    }
+    nextQuestion(word)
   }
-
-  useEffect(() => {}, [])
-
   const renderItem = (word, index) => {
-    const animatedValue = useDerivedValue(() => {
-      return withTiming(answerSelected === word ? 1 : 0, {
-        duration: 400,
-      })
-    }, [answerSelected])
-
-    const animatedCardStyle = useAnimatedStyle(() => {
-      const backgroundColor = interpolateColor(
-        animatedValue.value,
-        [0, 1],
-        [color.palette.white, color.palette.orangeDarker],
-      )
-
-      return { backgroundColor }
-    })
-    const animatedTextStyle = useAnimatedStyle(() => {
-      const colors = interpolateColor(
-        animatedValue.value,
-        [0, 1],
-        [color.palette.black, color.palette.white],
-      )
-
-      return { color: colors }
-    })
     return (
       <PressScale onPress={handleSelect(word)} key={`k-${index}`}>
-        <Animated.View style={[styles.item, animatedCardStyle]}>
-          <AnimatedText preset={"bold"} style={[styles.text, animatedTextStyle]} text={word} />
+        <Animated.View style={styles.item}>
+          <AnimatedText preset={"bold"} style={styles.text} text={word} />
         </Animated.View>
       </PressScale>
     )
@@ -112,34 +98,26 @@ export function ExerciseScreen() {
         showsHorizontalScrollIndicator={false}
         scrollEnabled={true}
       >
-        {[1, 2, 3, 4].map((el, index) => {
+        {params?.data?.map((el, index) => {
           return (
             <View key={`k-${index}`} style={{ width }}>
               <View style={styles.image}>
-                <Image
+                <FImage
                   resizeMode={"contain"}
                   style={styles.img}
                   source={{
-                    uri: "https://cdn.picpng.com/apple/apple-apple-tree-fruits-fruit-46395.png",
+                    uri: params?.data?.[currentIndex]?.image,
                   }}
                 />
               </View>
               <Card style={styles.card}>
-                <Text style={styles.question}>What do you see in picture? {currentIndex}</Text>
-                {["Apple", "Orange", "Lemon"]?.map((el, index) => renderItem(el, index))}
+                <Text style={styles.question}>{currentIndex + 1}. What do you see in picture?</Text>
+                {shuffle(randomAnswer[currentIndex])?.map((el, index) => renderItem(el, index))}
               </Card>
             </View>
           )
         })}
       </Ani.ScrollView>
-      <Toast
-        autoHide={true}
-        position="bottom"
-        bottomOffset={70}
-        config={toastConfig}
-        visibilityTime={5000}
-        onHide={nextQuestion}
-      />
     </Screen>
   )
 }

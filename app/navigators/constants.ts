@@ -23,6 +23,7 @@ export enum RouteName {
   LoginScreen = "LoginScreen",
   RegisterScreen = "RegisterScreen",
   ExerciseScreen = "ExerciseScreen",
+  FinishScreen = "FinishScreen",
 }
 export type NavigatorParamList = {
   [RouteName.HomeScreen]: undefined;
@@ -35,4 +36,5 @@ export type NavigatorParamList = {
   [RouteName.LoginScreen]: undefined;
   [RouteName.RegisterScreen]: undefined;
   [RouteName.ExerciseScreen]: undefined;
+  [RouteName.FinishScreen]: undefined;
 };

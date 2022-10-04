@@ -18,7 +18,7 @@ export function HomeHeader(props: HeaderProps) {
   return (
     <Card style={styles.container}>
       <View style={styles.row}>
-        <TouchableOpacity style={styles.box} onPress={onPress}>
+        {/* <TouchableOpacity style={styles.box} onPress={onPress}>
           <AnimatedLottieView
             style={styles.icon}
             autoPlay={true}
@@ -26,7 +26,8 @@ export function HomeHeader(props: HeaderProps) {
             speed={0.5}
             source={require("../../../assets/lotties/menu.json")}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <View />
         <Image
           resizeMode={"cover"}
           style={styles.img}
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 40,
     height: 250,
     marginHorizontal: 0,
-    paddingTop: 10
+    paddingTop: 10,
   },
   footer: {
     flex: 1,

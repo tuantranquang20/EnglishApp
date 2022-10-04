@@ -1,19 +1,26 @@
-import AnimatedLottieView from "lottie-react-native";
-import React, { memo } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { typography } from "~app/theme";
-import { getLottieRandom } from "~app/utils/helper";
+import { useNavigation } from "@react-navigation/native"
+import AnimatedLottieView from "lottie-react-native"
+import React, { memo } from "react"
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { color, typography } from "~app/theme"
+import { getLottieRandom } from "~app/utils/helper"
 
 interface Props {
-  handlePressLottie: () => void;
+  handlePressLottie: () => void
 }
 
 const Header = (props: Props) => {
-  const { handlePressLottie } = props;
+  const { handlePressLottie } = props
+  const navigation = useNavigation()
   return (
     <View>
       <View style={styles.row}></View>
-      <Text style={styles.title}>Translate this sentence</Text>
+      <View style={styles.center}>
+        <TouchableOpacity style={styles.back} onPress={() => navigation.goBack()}>
+          <Image source={require("../../../assets/images/back.png")} style={styles.img} />
+        </TouchableOpacity>
+        <Text style={styles.title}>Complete this sentence</Text>
+      </View>
       <TouchableOpacity onPress={handlePressLottie} style={styles.rowImg}>
         <AnimatedLottieView
           style={styles.icon}
@@ -29,15 +36,39 @@ const Header = (props: Props) => {
         />
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
-export default memo(Header, () => true);
+export default memo(Header, () => true)
 
 const styles = StyleSheet.create({
+  back: {
+    alignItems: "center",
+    backgroundColor: color.palette.white,
+    borderRadius: 20,
+    elevation: 5,
+    height: 40,
+    justifyContent: "center",
+    marginLeft: 15,
+    shadowColor: color.palette.black,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    width: 40,
+    zIndex: 1,
+  },
+  center: {
+    alignItems: "center",
+    flexDirection: "row",
+  },
   icon: {
     height: 200,
     width: 200,
+  },
+  img: {
+    height: 20,
+    tintColor: color.palette.lightGrey,
+    width: 20,
   },
   mess: {
     height: 50,
@@ -60,7 +91,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: typography.semiBold,
-    fontSize: 24,
+    fontSize: 22,
     paddingLeft: 15,
   },
-});
+})

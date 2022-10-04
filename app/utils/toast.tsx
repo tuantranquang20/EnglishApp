@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import AnimatedLottieView from "lottie-react-native";
 import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Text } from "~app/components";
 import { color } from "~app/theme";
 import { getFailedLottie, getSuccessLottie, isIOS } from "./helper";

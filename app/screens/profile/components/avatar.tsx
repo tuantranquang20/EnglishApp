@@ -6,7 +6,7 @@ export function Avatar() {
   return (
     <View>
       <Image
-        resizeMode={"contain"}
+        resizeMode={"cover"}
         style={styles.img}
         source={require("../../../../assets/images/avt.jpeg")}
       />

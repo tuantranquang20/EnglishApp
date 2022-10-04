@@ -1,28 +1,28 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { StyleSheet, View, Animated, Dimensions } from "react-native"
-import DuoDragDrop, { DuoDragDropRef, Word, Lines } from "~components/doulingo"
 import { color } from "~app/theme"
-import { customAnimatedStyle } from "~app/utils/helper"
 import Footer from "~app/components/doulingo/components/footer"
 import { SelectCell } from "./components/select-cell"
 import { SelectWord } from "./components/select-word"
 import { COLLECTION } from "~app/constants/constants"
-import { getDataFromRealTimeDB } from "~app/services/api/realtime-database"
+import { createListening, getDataFromRealTimeDB } from "~app/services/api/realtime-database"
 import { scrollTo, useAnimatedRef, useDerivedValue, useSharedValue } from "react-native-reanimated"
-import { Screen } from "~app/components"
+import { Button, Screen } from "~app/components"
 import Tts from "react-native-tts"
 import Toast from "react-native-toast-message"
 import { toastConfig } from "~app/utils/toast"
-import isEqual from "lodash/isEqual"
+import { navigate } from "~app/navigators"
+import { RouteName } from "~app/navigators/constants"
+import { useRoute } from "@react-navigation/native"
 
 const { width: screenWidth } = Dimensions.get("window")
 
 export function ListeningScreen() {
   const [answered, setAnswered] = useState<string | null>(null)
-  const duoDragDropRef = useRef<DuoDragDropRef>(null)
   const [dataOfLesson, setDataOfLesson] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
+  const { params } = useRoute()
   const aref = useAnimatedRef()
   const scroll = useSharedValue(0)
 
@@ -33,11 +33,10 @@ export function ListeningScreen() {
   const getAllData = useCallback(async () => {
     const body = {
       collection: COLLECTION.listening,
-      lesson: "lessonOne",
+      lesson: params,
     }
     await getDataFromRealTimeDB(body, (data) => setDataOfLesson(data))
   }, [])
-
   useEffect(() => {
     getAllData()
   }, [])
@@ -70,21 +69,14 @@ export function ListeningScreen() {
     readText(word)
     setAnswered(word)
   }
-  const handlePressImage = (item) => {
-    readText(item?.word)
-    setAnswered(item?.word)
-  }
   const handlePressCell = (word) => {
     readText(word)
     setAnswered(word)
   }
-  const handlePressDouLingo = (word) => {
-    setAnswered(word)
-    readText(word)
-  }
   const handlePressLottie = (answer) => () => {
     readText(answer)
   }
+
   const handleCheckAnswer = (isTrue) => {
     if (isTrue) {
       Toast.show({
@@ -102,10 +94,6 @@ export function ListeningScreen() {
   }
   const handleSubmitAnswer = () => {
     switch (dataOfLesson[currentIndex]?.type) {
-      case "douLingo":
-        const wordRef = duoDragDropRef.current?.getAnsweredWords()
-        handleCheckAnswer(isEqual(wordRef, dataOfLesson[currentIndex].answer))
-        break
       case "selectCell":
         handleCheckAnswer(dataOfLesson[currentIndex]?.rawAnswer === answered)
         break
@@ -116,11 +104,10 @@ export function ListeningScreen() {
         break
     }
   }
-
   const nextQuestion = () => {
     setCurrentIndex(currentIndex + 1)
     scroll.value = scroll.value + 1
-    if (scroll.value >= dataOfLesson.length - 1) scroll.value = 0
+    if (scroll.value >= dataOfLesson.length - 1) navigate(RouteName.FinishScreen)
   }
 
   return (
@@ -137,25 +124,6 @@ export function ListeningScreen() {
         >
           {dataOfLesson?.map((el, index) => {
             switch (el.type) {
-              case "douLingo":
-                return (
-                  <DuoDragDrop
-                    handlePressLottie={handlePressLottie(el?.rawAnswer)}
-                    key={`k-${index}`}
-                    ref={duoDragDropRef}
-                    words={el?.words}
-                    wordHeight={40}
-                    lineHeight={49}
-                    wordGap={4}
-                    wordBankOffsetY={10}
-                    wordBankAlignment="center"
-                    animatedStyleWorklet={customAnimatedStyle}
-                    renderWord={() => (
-                      <Word handlePressDouLingo={handlePressDouLingo} textStyle={styles.word} />
-                    )}
-                    renderLines={(props) => <Lines {...props} containerStyle={styles.lines} />}
-                  />
-                )
               case "selectCell":
                 return (
                   <SelectCell
@@ -181,17 +149,6 @@ export function ListeningScreen() {
           })}
         </Animated.ScrollView>
         <Footer handlePress={handleSubmitAnswer} />
-        {/* {answeredWords && (
-          <View style={{ marginTop: 10 }}>
-            <Text>{JSON.stringify(answeredWords)}</Text>
-          </View>
-        )} */}
-        {/* <View style={{ marginTop: 10 }}>
-          <Button
-            title={`Gestures disabled: ${gesturesDisabled}`}
-            onPress={() => setGesturesDisabled((s) => !s)}
-          />
-        </View> */}
       </View>
       <Toast
         autoHide={true}
@@ -213,11 +170,5 @@ const styles = StyleSheet.create({
   dragDropContainer: {
     flex: 1,
     // margin: 20,
-  },
-  lines: {
-    backgroundColor: color.transparent,
-  },
-  word: {
-    color: color.palette.black,
   },
 })

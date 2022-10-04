@@ -1,22 +1,16 @@
-import {
-  StyleSheet,
-  Dimensions,
-  FlatList,
-  View,
-  TouchableOpacity,
-} from "react-native";
-import React from "react";
-import { Card, PressScale, Screen, Text } from "~app/components";
-import AnimatedLottieView from "lottie-react-native";
-import { color } from "~app/theme";
-import { CoverImage } from "./components/cover-image";
-import { Avatar } from "./components/avatar";
-import { AppStacks, RouteName } from "~app/navigators/constants";
-import { StackActions, useNavigation } from "@react-navigation/native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import auth from "@react-native-firebase/auth";
+import { StyleSheet, Dimensions, FlatList, View, TouchableOpacity } from "react-native"
+import React from "react"
+import { Card, PressScale, Screen, Text } from "~app/components"
+import AnimatedLottieView from "lottie-react-native"
+import { color } from "~app/theme"
+import { CoverImage } from "./components/cover-image"
+import { Avatar } from "./components/avatar"
+import { AppStacks, RouteName } from "~app/navigators/constants"
+import { StackActions, useNavigation } from "@react-navigation/native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import auth from "@react-native-firebase/auth"
 
-const { width } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen")
 
 const feature = [
   {
@@ -35,36 +29,35 @@ const feature = [
     screen: RouteName.LoginScreen,
     speed: 1,
   },
-];
+]
 
 export const ProfileScreen = () => {
-  const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
+  const navigation = useNavigation()
+  const insets = useSafeAreaInsets()
 
   const onPress = (item) => async () => {
     if (item?.screen === RouteName.LoginScreen) {
-      await auth().signOut();
+      if (auth().currentUser) {
+        await auth().signOut()
+      }
       navigation.dispatch(
         StackActions.replace(
           AppStacks.AuthStack as never,
           {
             screen: RouteName.LoginScreen,
-          } as never
-        )
-      );
+          } as never,
+        ),
+      )
     }
-  };
+  }
 
   const onToggleDrawer = () => {
-    navigation.openDrawer();
-  };
+    navigation.openDrawer()
+  }
 
   const renderItem = ({ item }) => {
     return (
-      <PressScale
-        onPress={onPress(item)}
-        style={[styles.vItem, styles.row, styles.space]}
-      >
+      <PressScale onPress={onPress(item)} style={[styles.vItem, styles.row, styles.space]}>
         <View style={styles.row}>
           <AnimatedLottieView
             style={styles.homeIcon}
@@ -83,13 +76,13 @@ export const ProfileScreen = () => {
           source={require("../../../assets/lotties/arrow-down.json")}
         />
       </PressScale>
-    );
-  };
+    )
+  }
   return (
     <Screen unsafe style={styles.container} preset="fixed">
       <CoverImage />
       <TouchableOpacity
-        style={[styles.box, { marginTop: insets.top }]}
+        style={[styles.box, { marginTop: insets.top + 10 }]}
         onPress={onToggleDrawer}
       >
         <AnimatedLottieView
@@ -110,8 +103,8 @@ export const ProfileScreen = () => {
         />
       </Card>
     </Screen>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   arrow: {
@@ -173,4 +166,4 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     width: width - 30,
   },
-});
+})

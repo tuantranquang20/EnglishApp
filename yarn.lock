@@ -12236,6 +12236,11 @@ react-native-lottie-splash-screen@^0.1.14:
   resolved "https://registry.yarnpkg.com/react-native-lottie-splash-screen/-/react-native-lottie-splash-screen-0.1.14.tgz#b8168556c695524f85383ba07dfc979c17e3d6c8"
   integrity sha512-Y81UHnvJy7/dbkmZv6M3q4nz8PG9cG7HqAfYhPC2+RG31/wqFsKzCnj+MLg6dGuCuUSuqJRIQUeM+S5GWNkOcA==
 
+react-native-push-notification@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-8.1.1.tgz#a41d20c70ea5a7709417e96261b225461f8dc73a"
+  integrity sha512-XpBtG/w+a6WXTxu6l1dNYyTiHnbgnvjoc3KxPTxYkaIABRmvuJZkFxqruyGvfCw7ELAlZEAJO+dthdTabCe1XA==
+
 react-native-reanimated@^2.4.1:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.8.0.tgz#93c06ca84d91fb3865110b0857c49a24e316130e"

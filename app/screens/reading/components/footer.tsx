@@ -4,9 +4,12 @@ import { goBack, navigate } from "~app/navigators"
 import { RouteName } from "~app/navigators/constants"
 import { color } from "~app/theme"
 
-export function Footer({ params }) {
+export function Footer({ params, data }) {
   const onLearn = () => {
-    navigate(RouteName.ExerciseScreen, params)
+    navigate(RouteName.ExerciseScreen, {
+      params,
+      data,
+    })
   }
   return (
     <View style={styles.container}>
@@ -51,5 +54,9 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginRight: 15,
     padding: 10,
+    shadowColor: color.palette.black,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
   },
 })

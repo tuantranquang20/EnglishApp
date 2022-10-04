@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react"
-import { Dimensions, StyleSheet } from "react-native"
+import { Dimensions, StyleSheet, View } from "react-native"
 import {
   getDataLesson,
   getLearningLesson,
@@ -24,16 +24,10 @@ export function Lesson() {
   const insets = useSafeAreaInsets()
   const getAllData = useCallback(async () => {
     await getDataLesson({ collection: COLLECTION.reading }, async (data) => {
-      await getLearningLesson((progress) => {
-        const result = data.map((item) => ({
-          ...item,
-          percent: progress?.[item?.key] ?? 0,
-        }))
-        if (result.length) {
-          const order = sortBy(result, ["index"])
-          setLessons(order)
-        }
-      })
+      if (data.length) {
+        const order = sortBy(data, ["index"])
+        setLessons(order)
+      }
     })
   }, [])
 
@@ -55,7 +49,7 @@ export function Lesson() {
       <PressScale onPress={handlePress(item?.key)}>
         <Card style={styles.card}>
           <Text style={styles.title} text={item?.title} />
-          <PercentageCircle radius={17} percent={item.percent} color={color.palette.orangeDarker} />
+          {/* <PercentageCircle radius={17} percent={item.percent} color={color.palette.orangeDarker} /> */}
         </Card>
       </PressScale>
     )
@@ -72,8 +66,9 @@ export function Lesson() {
         />
       </Animated.View>
       <Animated.FlatList
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={<View style={{ height: 320 }} />}
         onScroll={onScrollEvent({ y })}
-        style={{ paddingTop: width - insets.top }}
         data={lessons}
         renderItem={renderItem}
         keyExtractor={(_, index) => `k-${index}`}
@@ -90,8 +85,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 20,
     flexDirection: "row",
-    marginTop: 30,
     justifyContent: "space-between",
+    marginTop: 30,
   },
   icon: {
     aspectRatio: 1 / 1,
@@ -106,15 +101,5 @@ const styles = StyleSheet.create({
     fontFamily: typography.bold,
     marginLeft: 15,
     marginVertical: 15,
-  },
-  buttonBack: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  iconBack: {
-    width: 40,
-    height: 40,
   },
 })
