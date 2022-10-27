@@ -197,6 +197,8 @@ dependencies {
     implementation "com.facebook.react:react-native:+"
     implementation project(path: ':@react-native-community_voice')  // From node_modules
     implementation project(':react-native-lottie-splash-screen')
+    implementation project(':react-native-push-notification')
+    implementation 'com.google.firebase:firebase-analytics:14.9.4'
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
@@ -258,3 +260,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle");
 applyNativeModulesAppBuildGradle(project);
+apply plugin: 'com.google.gms.google-services' // <--- google config
