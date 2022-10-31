@@ -1,5 +1,5 @@
-import { StyleSheet, Dimensions, FlatList, View, TouchableOpacity } from "react-native"
-import React from "react"
+import { StyleSheet, Dimensions, FlatList, View, TouchableOpacity, Image } from "react-native"
+import React, { useEffect } from "react"
 import { Card, PressScale, Screen, Text } from "~app/components"
 import AnimatedLottieView from "lottie-react-native"
 import { color } from "~app/theme"
@@ -14,17 +14,17 @@ const { width } = Dimensions.get("screen")
 
 const feature = [
   {
-    icon: require("../../../assets/lotties/setting.json"),
+    icon: require("../../../assets/images/settings.png"),
     title: "Setting",
     speed: 0.5,
   },
   {
-    icon: require("../../../assets/lotties/message.json"),
+    icon: require("../../../assets/images/info.png"),
     title: "About me",
     speed: 1,
   },
   {
-    icon: require("../../../assets/lotties/logout.json"),
+    icon: require("../../../assets/images/logout.png"),
     title: "Logout",
     screen: RouteName.LoginScreen,
     speed: 1,
@@ -55,17 +55,13 @@ export const ProfileScreen = () => {
     navigation.openDrawer()
   }
 
+  useEffect(() => {}, [])
+
   const renderItem = ({ item }) => {
     return (
       <PressScale onPress={onPress(item)} style={[styles.vItem, styles.row, styles.space]}>
         <View style={styles.row}>
-          <AnimatedLottieView
-            style={styles.homeIcon}
-            autoPlay
-            speed={item?.speed}
-            loop
-            source={item.icon}
-          />
+          <Image style={styles.icon} source={item?.icon} />
           <Text style={styles.txt} preset={"bold"} text={item.title} />
         </View>
         <AnimatedLottieView

@@ -1,8 +1,12 @@
-import { Image, StyleSheet, View } from "react-native";
-import React from "react";
-import { Text } from "~app/components";
+import { Image, StyleSheet, View } from "react-native"
+import React from "react"
+import { Text } from "~app/components"
+import { useStores } from "~app/models"
 
 export function Avatar() {
+  const { user } = useStores()
+  const { userInformation } = user
+
   return (
     <View>
       <Image
@@ -10,14 +14,10 @@ export function Avatar() {
         style={styles.img}
         source={require("../../../../assets/images/avt.jpeg")}
       />
-      <Text style={styles.name} preset={"header"} text={"Grey"} />
-      <Text
-        style={styles.name}
-        preset={"fieldLabel"}
-        text={"Hello, nice to meet you Grey!"}
-      />
+      <Text style={styles.name} preset={"header"} text={userInformation?.displayName} />
+      <Text style={styles.name} preset={"fieldLabel"} text={`Hello, nice to meet you ${userInformation?.displayName}!`} />
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -32,4 +32,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 10,
   },
-});
+})

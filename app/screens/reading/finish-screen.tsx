@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Dimensions, Image, StyleSheet, TouchableOpacity, View } from "react-native"
 import React from "react"
 import AnimatedLottieView from "lottie-react-native"
@@ -12,18 +13,16 @@ export default function FinishScreen() {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
   const { params } = useRoute()
+  const handleBack = () => {
+    if (params?.screen === "exercise") {
+      navigation.dispatch(StackActions.pop(3))
+    } else {
+      navigation.dispatch(StackActions.pop(2))
+    }
+  }
   return (
     <View style={styles.flex1}>
-      <TouchableOpacity
-        style={[styles.back, { marginTop: insets.top + 10 }]}
-        onPress={() => {
-          if (params?.screen === "exercise") {
-            navigation.dispatch(StackActions.pop(3))
-          } else {
-            navigation.dispatch(StackActions.pop(2))
-          }
-        }}
-      >
+      <TouchableOpacity style={[styles.back, { marginTop: insets.top + 10 }]} onPress={handleBack}>
         <Image source={require("../../../assets/images/back.png")} style={styles.img} />
       </TouchableOpacity>
       <View style={styles.container}>
@@ -35,13 +34,17 @@ export default function FinishScreen() {
           source={require("../../assets/lotties/success.json")}
         />
         {params?.screen === "exercise" ? (
-          <Text style={styles.finish}>{`Chúc mừng bạn đã đúng ${
+          <Text style={styles.finish}>{`Congrats you got ${
             params?.answer?.length - xor(params?.answer, params?.result)?.length
-          }/${params?.answer?.length} câu`}</Text>
+          }/${params?.answer?.length} correct`}</Text>
         ) : (
-          <View />
+          <Text
+            style={styles.finish}
+          >{`Congrats you got ${params?.answerTrue}/${params?.dataOfLesson} correct`}</Text>
         )}
-        <Text style={styles.des}>Mình cùng nhau cố gắng thêm nhé!</Text>
+        <TouchableOpacity onPress={handleBack} style={styles.btn}>
+          <Text style={styles.des}>Keep going!</Text>
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -64,13 +67,22 @@ const styles = StyleSheet.create({
     width: 40,
     zIndex: 1,
   },
+  btn: {
+    alignItems: "center",
+    backgroundColor: color.palette.orange,
+    borderRadius: 30,
+    justifyContent: "center",
+    marginTop: 20,
+    paddingHorizontal: 60,
+    paddingVertical: 10,
+  },
   container: {
     alignItems: "center",
     flex: 1,
     justifyContent: "center",
   },
   des: {
-    marginTop: 20,
+    color: color.palette.white,
   },
   finish: {
     fontFamily: typography.semiBold,

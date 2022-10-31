@@ -8,6 +8,7 @@ import { color } from "~app/theme"
 import AnimatedLottieView from "lottie-react-native"
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "~app/models"
+import auth from "@react-native-firebase/auth"
 
 export function HomeHeader(props: HeaderProps) {
   const navigation = useNavigation()
@@ -15,18 +16,21 @@ export function HomeHeader(props: HeaderProps) {
   const onPress = () => {
     navigation.openDrawer()
   }
+
   return (
     <Card style={styles.container}>
       <View style={styles.row}>
-        {/* <TouchableOpacity style={styles.box} onPress={onPress}>
-          <AnimatedLottieView
-            style={styles.icon}
-            autoPlay={true}
-            loop={true}
-            speed={0.5}
-            source={require("../../../assets/lotties/menu.json")}
-          />
-        </TouchableOpacity> */}
+        {auth().currentUser ? (
+          <TouchableOpacity style={styles.box} onPress={onPress}>
+            <AnimatedLottieView
+              style={styles.icon}
+              autoPlay={true}
+              loop={true}
+              speed={0.5}
+              source={require("../../../assets/lotties/menu.json")}
+            />
+          </TouchableOpacity>
+        ) : null}
         <View />
         <Image
           resizeMode={"cover"}

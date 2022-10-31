@@ -11,6 +11,8 @@ import Animated, {
 import { isIOS } from "~app/utils/helper"
 import { useNavigation, useRoute } from "@react-navigation/native"
 import { RouteName } from "~app/navigators/constants"
+import { updateLearningLesson } from "~app/services/api/realtime-database"
+import { xor } from "lodash"
 
 const { width } = Dimensions.get("screen")
 const AnimatedText = Animated.createAnimatedComponent(Text)
@@ -60,14 +62,21 @@ export function ExerciseScreen() {
   }, [])
 
   const nextQuestion = (word) => {
+    const percent = Math.round(
+      (100 * (answer?.length - xor(answer, [...result, word])?.length)) / (answer?.length || 1),
+    )
     if (currentIndex === params?.data?.length - 1) {
+      if (+params?.params?.percent < +percent) {
+        updateLearningLesson({ lesson: params?.params?.key, percent: percent, type: "reading" })
+      }
       return navigation.navigate(RouteName.FinishScreen, {
         result: [...result, word],
         answer,
         screen: "exercise",
-        lesson: params?.params
+        lesson: params?.params,
       })
     }
+
     setResult([...result, word])
     setCurrentIndex(currentIndex + 1)
     scroll.value = scroll.value + 1

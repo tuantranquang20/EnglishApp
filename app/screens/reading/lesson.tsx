@@ -1,10 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react"
 import { Dimensions, StyleSheet, View } from "react-native"
-import {
-  getDataLesson,
-  getLearningLesson,
-  updateLearningLesson,
-} from "~app/services/api/realtime-database"
+import { getDataLesson, getLearningLesson } from "~app/services/api/realtime-database"
 import { Card, PercentageCircle, PressScale, Screen, Text } from "~app/components"
 import AnimatedLottieView from "lottie-react-native"
 import { color, typography } from "~app/theme"
@@ -24,10 +20,16 @@ export function Lesson() {
   const insets = useSafeAreaInsets()
   const getAllData = useCallback(async () => {
     await getDataLesson({ collection: COLLECTION.reading }, async (data) => {
-      if (data.length) {
-        const order = sortBy(data, ["index"])
-        setLessons(order)
-      }
+      await getLearningLesson("reading", (progress) => {
+        const result = data.map((item) => ({
+          ...item,
+          percent: progress?.[item?.key] ?? 0,
+        }))
+        if (result.length) {
+          const order = sortBy(result, ["index"])
+          setLessons(order)
+        }
+      })
     })
   }, [])
 
@@ -40,16 +42,19 @@ export function Lesson() {
     outputRange: [1, 0],
     extrapolateRight: Extrapolate.CLAMP,
   })
-  const handlePress = (key) => () => {
-    navigate(RouteName.ReadingScreen, key)
+  const handlePress = (key, percent) => () => {
+    navigate(RouteName.ReadingScreen, {
+      key,
+      percent,
+    })
   }
 
   const renderItem = ({ item }) => {
     return (
-      <PressScale onPress={handlePress(item?.key)}>
+      <PressScale onPress={handlePress(item?.key, item?.percent)}>
         <Card style={styles.card}>
           <Text style={styles.title} text={item?.title} />
-          {/* <PercentageCircle radius={17} percent={item.percent} color={color.palette.orangeDarker} /> */}
+          <PercentageCircle radius={17} percent={item.percent} color={color.palette.orangeDarker} />
         </Card>
       </PressScale>
     )

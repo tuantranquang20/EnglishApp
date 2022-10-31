@@ -58,13 +58,13 @@ export const createSpeaking = async () => {
   console.log(result)
 }
 
-export const getLearningLesson = async (callback) => {
+export const getLearningLesson = async (type, callback) => {
   if (auth().currentUser) {
     await database()
       .ref("englishApp")
       .child("userLearning")
       .child(auth().currentUser?.uid)
-      .child("reading")
+      .child(type)
       .on("value", (snapshot) => {
         callback(snapshot.val())
       })
@@ -84,7 +84,7 @@ export const updateLearningLesson = async (data) => {
       .child("userLearning")
       .child(auth().currentUser?.uid)
       .child(data?.type)
-      .push({
+      .update({
         [data?.lesson]: data?.percent,
       })
   }

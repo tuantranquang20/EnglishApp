@@ -1,6 +1,6 @@
 import { Dimensions, FlatList, Image, StyleSheet, View } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
-import { getDataLesson } from "~app/services/api/realtime-database"
+import { getDataLesson, updateLearningLesson } from "~app/services/api/realtime-database"
 import { Card, PressScale, Screen, Text } from "~app/components"
 import AnimatedLottieView from "lottie-react-native"
 import { typography } from "~app/theme"

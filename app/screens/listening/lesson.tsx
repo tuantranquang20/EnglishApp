@@ -1,9 +1,9 @@
 import { Dimensions, StyleSheet, View } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
-import { getDataLesson } from "~app/services/api/realtime-database"
-import { Card, PressScale, Screen, Text } from "~app/components"
+import { getDataLesson, getLearningLesson } from "~app/services/api/realtime-database"
+import { Card, PercentageCircle, PressScale, Screen, Text } from "~app/components"
 import AnimatedLottieView from "lottie-react-native"
-import { typography } from "~app/theme"
+import { color, typography } from "~app/theme"
 import { navigate } from "~app/navigators"
 import { RouteName } from "~app/navigators/constants"
 import Animated, { interpolateNode, Extrapolate, Value } from "react-native-reanimated"
@@ -20,9 +20,17 @@ export function Lesson() {
   const insets = useSafeAreaInsets()
 
   const getAllData = useCallback(async () => {
-    await getDataLesson({ collection: COLLECTION.listening }, (data) => {
-      const order = sortBy(data, ["index"])
-      setLessons(order)
+    await getDataLesson({ collection: COLLECTION.listening }, async (data) => {
+      await getLearningLesson("listening", (progress) => {
+        const result = data.map((item) => ({
+          ...item,
+          percent: progress?.[item?.key] ?? 0,
+        }))
+        if (result.length) {
+          const order = sortBy(result, ["index"])
+          setLessons(order)
+        }
+      })
     })
   }, [])
 
@@ -35,15 +43,20 @@ export function Lesson() {
     outputRange: [1, 0],
     extrapolateRight: Extrapolate.CLAMP,
   })
-  const handlePress = (key) => () => {
-    navigate(RouteName.ListeningScreen, key)
+  const handlePress = (key, percent) => () => {
+    navigate(RouteName.ListeningScreen, { key, percent })
   }
 
   const renderItem = ({ item }) => {
     return (
-      <PressScale onPress={handlePress(item?.key)}>
+      <PressScale onPress={handlePress(item?.key, item?.percent)}>
         <Card style={styles.card}>
           <Text style={styles.title} text={item?.title} />
+          <PercentageCircle
+            radius={17}
+            percent={item?.percent || 0}
+            color={color.palette.orangeDarker}
+          />
         </Card>
       </PressScale>
     )
@@ -80,6 +93,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 20,
     flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 30,
   },
   icon: {

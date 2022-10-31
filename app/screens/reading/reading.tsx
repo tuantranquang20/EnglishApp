@@ -14,12 +14,11 @@ import { ICardRef } from "./interface"
 import { Button, Progress, Screen, Text } from "~app/components"
 import { Footer } from "./components/footer"
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window")
+const { width: screenWidth } = Dimensions.get("window")
 
 export function ReadingScreen() {
   const insets = useSafeAreaInsets()
   const [dataOfLesson, setDataOfLesson] = useState([])
-  const [currentItem, setCurrentItem] = useState(0)
   const { params } = useRoute()
 
   const initTts = async () => {
@@ -45,7 +44,7 @@ export function ReadingScreen() {
     // await createReading()
     const body = {
       collection: COLLECTION.reading,
-      lesson: params,
+      lesson: params?.key,
     }
     await getDataFromRealTimeDB(body, (data) => setDataOfLesson(data))
   }, [])
@@ -80,7 +79,7 @@ export function ReadingScreen() {
       unsafe
       preset="fixed"
       statusBar="dark-content"
-      style={[styles.container, { marginTop: insets.top + 70 }]}
+      style={[styles.container, { marginTop: insets.top + 50 }]}
     >
       <ReanimatedCarousel
         loop={false}
@@ -95,9 +94,6 @@ export function ReadingScreen() {
         }}
         panGestureHandlerProps={{
           activeOffsetX: [-10, 10],
-        }}
-        onProgressChange={(_, absoluteProgress: number) => {
-          setCurrentItem(absoluteProgress)
         }}
         mode="vertical-stack"
         scrollAnimationDuration={300}

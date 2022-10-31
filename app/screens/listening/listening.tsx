@@ -6,7 +6,11 @@ import Footer from "~app/components/doulingo/components/footer"
 import { SelectCell } from "./components/select-cell"
 import { SelectWord } from "./components/select-word"
 import { COLLECTION } from "~app/constants/constants"
-import { createListening, getDataFromRealTimeDB } from "~app/services/api/realtime-database"
+import {
+  createListening,
+  getDataFromRealTimeDB,
+  updateLearningLesson,
+} from "~app/services/api/realtime-database"
 import { scrollTo, useAnimatedRef, useDerivedValue, useSharedValue } from "react-native-reanimated"
 import { Button, Screen } from "~app/components"
 import Tts from "react-native-tts"
@@ -17,7 +21,7 @@ import { RouteName } from "~app/navigators/constants"
 import { useRoute } from "@react-navigation/native"
 
 const { width: screenWidth } = Dimensions.get("window")
-
+let answerTrue = 0
 export function ListeningScreen() {
   const [answered, setAnswered] = useState<string | null>(null)
   const [dataOfLesson, setDataOfLesson] = useState([])
@@ -33,7 +37,7 @@ export function ListeningScreen() {
   const getAllData = useCallback(async () => {
     const body = {
       collection: COLLECTION.listening,
-      lesson: params,
+      lesson: params?.key,
     }
     await getDataFromRealTimeDB(body, (data) => setDataOfLesson(data))
   }, [])
@@ -79,6 +83,7 @@ export function ListeningScreen() {
 
   const handleCheckAnswer = (isTrue) => {
     if (isTrue) {
+      answerTrue++
       Toast.show({
         type: "success",
         text1: "Nice!",
@@ -107,7 +112,17 @@ export function ListeningScreen() {
   const nextQuestion = () => {
     setCurrentIndex(currentIndex + 1)
     scroll.value = scroll.value + 1
-    if (scroll.value >= dataOfLesson.length - 1) navigate(RouteName.FinishScreen)
+    if (scroll.value >= dataOfLesson.length - 1) {
+      const percent = Math.round(100 * (+answerTrue / (dataOfLesson.length || 1)))
+      if (params?.percent < percent) {
+        updateLearningLesson({ lesson: params?.key, percent: percent, type: "listening" })
+      }
+      navigate(RouteName.FinishScreen, {
+        answerTrue,
+        dataOfLesson: dataOfLesson.length,
+      })
+      answerTrue = 0
+    }
   }
 
   return (

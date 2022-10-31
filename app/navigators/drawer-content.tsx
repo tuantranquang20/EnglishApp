@@ -1,34 +1,27 @@
-import React from "react";
-import { View, StyleSheet, Image } from "react-native";
+import React from "react"
+import { View, StyleSheet, Image } from "react-native"
 
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-} from "@react-navigation/drawer";
-import { Text } from "~app/components";
-import { color } from "~app/theme";
-import { useStores } from "~app/models";
+import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer"
+import { Text } from "~app/components"
+import { color } from "~app/theme"
+import { useStores } from "~app/models"
 
 export function DrawerContent(props) {
-  const { user } = useStores();
-  const { userInformation } = user;
+  const { user } = useStores()
+  const { userInformation } = user
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
           <View style={styles.userInfoSection}>
             <View style={{ flexDirection: "row", marginTop: 15 }}>
-              <Image
-                style={styles.avt}
-                source={require("../../assets/images/avt.jpeg")}
-              />
+              <Image style={styles.avt} source={require("../../assets/images/avt.jpeg")} />
               <View style={{ marginLeft: 15, justifyContent: "center" }}>
-                <Text
-                  style={styles.title}
-                  text={`${userInformation?.displayName || "Hello!"}`}
-                />
+                <Text style={styles.title} text={`${userInformation?.displayName || "Hello!"}`} />
                 <Text
                   style={styles.caption}
+                  ellipsizeMode="tail"
+                  numberOfLines={1}
                   text={`${userInformation?.email || "ops@gmail.com"}`}
                 />
               </View>
@@ -44,7 +37,7 @@ export function DrawerContent(props) {
         </View>
       </DrawerContentScrollView>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -54,7 +47,9 @@ const styles = StyleSheet.create({
     height: 60,
     width: 60,
   },
-  caption: {},
+  caption: {
+    width: 170,
+  },
   dash: {
     borderColor: color.palette.lighterGrey,
     borderStyle: "dashed",
@@ -77,4 +72,4 @@ const styles = StyleSheet.create({
     height: 1,
     overflow: "hidden",
   },
-});
+})
