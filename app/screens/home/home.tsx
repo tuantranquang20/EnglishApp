@@ -1,9 +1,9 @@
-import { StyleSheet } from "react-native";
-import React from "react";
-import { Screen } from "~app/components";
-import { HomeHeader } from "~app/components/header/home-header";
-import { Content } from "./components/content";
-import { RouteName } from "~app/navigators/constants";
+import { StyleSheet, Text, TouchableOpacity } from "react-native"
+import React from "react"
+import { Screen } from "~app/components"
+import { HomeHeader } from "~app/components/header/home-header"
+import { Content } from "./components/content"
+import { RouteName } from "~app/navigators/constants"
 
 const learn = [
   {
@@ -24,7 +24,7 @@ const learn = [
     screen: RouteName.LessonGrammarScreen,
     des: "Grammar",
   },
-];
+]
 export function HomeScreen() {
   return (
     <Screen style={styles.container} preset="scroll" statusBar="dark-content">
@@ -33,11 +33,11 @@ export function HomeScreen() {
         <Content item={el} key={`k-${index}`} />
       ))}
     </Screen>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 15,
   },
-});
+})

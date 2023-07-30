@@ -14,4 +14,5 @@ export const palette = {
   blue: "#2C5AFF",
   green: "#62E962",
   red: "#EE0000",
+  disable: "#f5f5f5",
 }

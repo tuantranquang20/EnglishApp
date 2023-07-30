@@ -10,6 +10,7 @@ import auth from "@react-native-firebase/auth"
 import { showConfirm } from "~app/components/alert/Alert"
 import { StackActions, useNavigation } from "@react-navigation/native"
 import { AppStacks, RouteName } from "~app/navigators/constants"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 const LottieViewAnimated = Animated.createAnimatedComponent(AnimatedLottieView)
 
 type Props = {
@@ -32,8 +33,9 @@ export function Content(props: Props) {
     setToggle(!toggle)
     onPress()
   }
-  const handleNavigate = (screen) => () => {
-    if (auth().currentUser || screen === RouteName.LessonGrammarScreen) {
+  const handleNavigate = (screen) => async () => {
+    const token = await AsyncStorage.getItem("TOKEN")
+    if (token) {
       navigate(screen)
     } else {
       showConfirm("You must login first", "Login now", () => {

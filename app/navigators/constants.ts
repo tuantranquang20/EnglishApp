@@ -12,6 +12,7 @@ export enum RouteName {
   HomeScreen = "HomeScreen",
   SaveScreen = "SaveScreen",
   ProfileScreen = "ProfileScreen",
+  SettingScreen = "SettingScreen",
   ReadingScreen = "ReadingScreen",
   SpeakingScreen = "SpeakingScreen",
   ListeningScreen = "ListeningScreen",
@@ -26,15 +27,15 @@ export enum RouteName {
   FinishScreen = "FinishScreen",
 }
 export type NavigatorParamList = {
-  [RouteName.HomeScreen]: undefined;
-  [RouteName.ProfileScreen]: undefined;
-  [RouteName.SaveScreen]: undefined;
-  [RouteName.ReadingScreen]: undefined;
-  [RouteName.SpeakingScreen]: undefined;
-  [RouteName.ListeningScreen]: undefined;
-  [RouteName.GrammarScreen]: undefined;
-  [RouteName.LoginScreen]: undefined;
-  [RouteName.RegisterScreen]: undefined;
-  [RouteName.ExerciseScreen]: undefined;
-  [RouteName.FinishScreen]: undefined;
-};
+  [RouteName.HomeScreen]: undefined
+  [RouteName.ProfileScreen]: undefined
+  [RouteName.SaveScreen]: undefined
+  [RouteName.ReadingScreen]: undefined
+  [RouteName.SpeakingScreen]: undefined
+  [RouteName.ListeningScreen]: undefined
+  [RouteName.GrammarScreen]: undefined
+  [RouteName.LoginScreen]: undefined
+  [RouteName.RegisterScreen]: undefined
+  [RouteName.ExerciseScreen]: undefined
+  [RouteName.FinishScreen]: undefined
+}

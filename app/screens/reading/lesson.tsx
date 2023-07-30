@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react"
 import { Dimensions, StyleSheet, View } from "react-native"
-import { getDataLesson, getLearningLesson } from "~app/services/api/realtime-database"
 import { Card, PercentageCircle, PressScale, Screen, Text } from "~app/components"
 import AnimatedLottieView from "lottie-react-native"
 import { color, typography } from "~app/theme"
@@ -9,52 +8,53 @@ import { RouteName } from "~app/navigators/constants"
 import Animated, { interpolateNode, Extrapolate, Value } from "react-native-reanimated"
 import { onScrollEvent } from "~app/utils/animated"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { COLLECTION } from "~app/constants/constants"
-import sortBy from "lodash/sortBy"
+import { LessonType } from "~app/constants/constants"
+import { AppApi } from "~app/services/api/app-api"
+import { useStores } from "~app/models"
+import { observer } from "mobx-react-lite"
 
 const { width } = Dimensions.get("window")
 
-export function Lesson() {
+export const Lesson = observer(() => {
   const y = React.useRef(new Value<number>(0)).current
   const [lessons, setLessons] = useState([])
   const insets = useSafeAreaInsets()
+  const { finish: finishStore } = useStores()
+
   const getAllData = useCallback(async () => {
-    await getDataLesson({ collection: COLLECTION.reading }, async (data) => {
-      await getLearningLesson("reading", (progress) => {
-        const result = data.map((item) => ({
-          ...item,
-          percent: progress?.[item?.key] ?? 0,
-        }))
-        if (result.length) {
-          const order = sortBy(result, ["index"])
-          setLessons(order)
-        }
-      })
-    })
+    const appApi = new AppApi()
+    const lessons = await appApi.getLesson(LessonType.READING)
+    if (lessons?.data?.length) {
+      setLessons(lessons?.data)
+    }
   }, [])
 
   useEffect(() => {
     getAllData()
-  }, [])
+  }, [finishStore.flag])
 
   const opacity = interpolateNode(y, {
     inputRange: [0, width - insets.top],
     outputRange: [1, 0],
     extrapolateRight: Extrapolate.CLAMP,
   })
-  const handlePress = (key, percent) => () => {
+  const handlePress = (id, percent) => () => {
     navigate(RouteName.ReadingScreen, {
-      key,
+      id,
       percent,
     })
   }
 
   const renderItem = ({ item }) => {
     return (
-      <PressScale onPress={handlePress(item?.key, item?.percent)}>
+      <PressScale onPress={handlePress(item?._id, item?.percentage)}>
         <Card style={styles.card}>
-          <Text style={styles.title} text={item?.title} />
-          <PercentageCircle radius={17} percent={item.percent} color={color.palette.orangeDarker} />
+          <Text style={styles.title} text={`${item?.title}: ${item?.name}`} />
+          <PercentageCircle
+            radius={17}
+            percent={item?.percentage}
+            color={color.palette.orangeDarker}
+          />
         </Card>
       </PressScale>
     )
@@ -80,7 +80,7 @@ export function Lesson() {
       />
     </Screen>
   )
-}
+})
 
 const styles = StyleSheet.create({
   bg: {

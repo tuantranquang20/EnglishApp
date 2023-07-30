@@ -1,7 +1,6 @@
 import { ApisauceInstance, create, ApiResponse } from "apisauce"
 import { getGeneralApiProblem } from "./api-problem"
 import { TranslateApiConfig, TRANSLATE_API_CONFIG } from "./translate-api-config"
-import * as Types from "./api.types"
 import { ITranslateApi } from "./interface"
 
 /**

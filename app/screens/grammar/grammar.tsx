@@ -1,12 +1,10 @@
-import { Dimensions, Image, StyleSheet, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import { FImage, Screen, Text } from "~app/components"
-import { COLLECTION } from "~app/constants/constants"
-import { getDataFromRealTimeDBForReading } from "~app/services/api/realtime-database"
 import { useRoute } from "@react-navigation/native"
 import { color, typography } from "~app/theme"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-const { width } = Dimensions.get("screen")
+import { AppApi } from "~app/services/api/app-api"
 
 export function GrammarScreen() {
   const [dataOfLesson, setDataOfLesson] = useState({})
@@ -14,16 +12,16 @@ export function GrammarScreen() {
   const insets = useSafeAreaInsets()
 
   const getData = useCallback(async () => {
-    const body = {
-      collection: COLLECTION.grammar,
-      lesson: params,
+    const appApi = new AppApi()
+    const grammar = await appApi.getGrammar(params)
+
+    if (grammar?.data?.items?.length) {
+      setDataOfLesson(grammar?.data?.items?.[0])
     }
-    await getDataFromRealTimeDBForReading(body, (data) => setDataOfLesson(data))
   }, [])
   useEffect(() => {
     getData()
   }, [])
-  console.log('dataOfLesson?.image',dataOfLesson?.image)
   return (
     <Screen
       back
@@ -36,7 +34,11 @@ export function GrammarScreen() {
         <Text style={styles.title}>{dataOfLesson?.title}</Text>
         <View style={styles.struct}>
           <Text style={styles.f20}>Cấu trúc</Text>
-          <FImage resizeMode={"contain"} source={{ uri: dataOfLesson?.image }} style={styles.image} />
+          <FImage
+            resizeMode={"contain"}
+            source={{ uri: dataOfLesson?.image }}
+            style={styles.image}
+          />
         </View>
         <View style={styles.struct}>
           <Text style={styles.f20}>Cách dùng</Text>

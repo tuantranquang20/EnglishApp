@@ -8,41 +8,61 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native"
-import React, { useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { color } from "~app/theme"
-import { Button, Card, TextField } from "~app/components"
+import { Button, Card, Text, TextField } from "~app/components"
 import { showMessages } from "~app/components/alert/Alert"
 import { useNavigation } from "@react-navigation/native"
 import { isIOS } from "~app/utils/helper"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { AppApi } from "~app/services/api/app-api"
+import { useStores } from "~app/models"
 
 const { width } = Dimensions.get("screen")
 
-export const RegisterScreen = () => {
+export const SettingScreen = () => {
   const navigation = useNavigation()
   const insets = useSafeAreaInsets()
   const [user, setUser] = useState({
-    email: "",
-    password: "",
     username: "",
+    email: "",
   })
 
-  const createUser = async () => {
+  const { user: userStore } = useStores()
+
+  const getAllData = useCallback(async () => {
+    const appApi = new AppApi()
+    const user = await appApi.getUser(userStore.userInformation._id)
+
+    if (user?.data) {
+      setUser({ email: user?.data?.email, username: user?.data?.username })
+    }
+  }, [])
+
+  useEffect(() => {
+    getAllData()
+  }, [])
+
+  const handlePress = async () => {
     try {
       const appApi = new AppApi()
-      const response = await appApi.signUp(user)
+      const response = await appApi.updateUser(userStore.userInformation._id, {
+        username: user.username,
+      })
       if (response?.data) {
-        showMessages("Sign up successfully", "Login now!", () => navigation.goBack())
+        await userStore.setUserStore({
+          ...userStore.userInformation,
+          username: response?.data?.username,
+        })
+        showMessages("Success", "Update successfully")
+      } else {
+        showMessages("Error", response?.message)
       }
     } catch (e) {
       Alert.alert("Error", e.message)
     }
   }
 
-  const handlePress = () => {
-    createUser()
-  }
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -61,29 +81,26 @@ export const RegisterScreen = () => {
         >
           <Image source={require("../../../assets/images/back.png")} style={styles.backIcon} />
         </TouchableOpacity>
+        <Text preset={"bold"} style={[styles.intro, { marginTop: insets.top + 70 }]}>
+          Update information
+        </Text>
         <Card style={styles.card}>
           <TextField
             sLabel={styles.sLabel}
-            label="Name"
-            inputStyle={styles.border}
-            keyboardType="default"
-            onChangeText={(text) => setUser({ ...user, username: text })}
+            label="Email"
+            inputStyle={[styles.border, styles.disable]}
+            editable={false}
+            value={user.email}
           />
           <TextField
             sLabel={styles.sLabel}
-            label="Email"
+            label="Username"
+            value={user.username}
             inputStyle={styles.border}
             keyboardType="email-address"
-            onChangeText={(text) => setUser({ ...user, email: text })}
+            onChangeText={(text) => setUser({ ...user, username: text })}
           />
-          <TextField
-            sLabel={styles.sLabel}
-            label="Password"
-            inputStyle={styles.border}
-            secureTextEntry={true}
-            onChangeText={(text) => setUser({ ...user, password: text })}
-          />
-          <Button text="Sign up" style={styles.btn} onPress={handlePress} />
+          <Button text="Update" style={styles.btn} onPress={handlePress} />
         </Card>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -130,9 +147,17 @@ const styles = StyleSheet.create({
     backgroundColor: color.palette.white,
     flex: 1,
   },
+  disable: {
+    backgroundColor: color.palette.disable,
+  },
   img: {
     height: 200,
     width: width,
+  },
+  intro: {
+    fontSize: 25,
+    marginLeft: 15,
+    position: "absolute",
   },
   sLabel: {
     backgroundColor: color.palette.white,

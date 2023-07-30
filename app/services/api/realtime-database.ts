@@ -46,7 +46,6 @@ export const getDataFromRealTimeDBForReading = async (data, callback) => {
       callback(snapshot.val())
     })
 }
-
 export const createSpeaking = async () => {
   const result = await ref("speaking")
     .child("lessonOne")
@@ -91,11 +90,11 @@ export const updateLearningLesson = async (data) => {
 }
 export const createListening = async () => {
   await ref("listening")
-    .child("lessonSix")
+    .child("lessonSeven")
     .child("data")
     .once("value", () => {
       ref("listening")
-        .child("lessonSix")
+        .child("lessonSeven")
         .child("data")
         .push({
           words: ["will", "will be", "was"],

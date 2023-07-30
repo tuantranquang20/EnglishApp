@@ -17,7 +17,7 @@ export function DrawerContent(props) {
             <View style={{ flexDirection: "row", marginTop: 15 }}>
               <Image style={styles.avt} source={require("../../assets/images/avt.jpeg")} />
               <View style={{ marginLeft: 15, justifyContent: "center" }}>
-                <Text style={styles.title} text={`${userInformation?.displayName || "Hello!"}`} />
+                <Text style={styles.title} text={`${userInformation?.username || "Hello!"}`} />
                 <Text
                   style={styles.caption}
                   ellipsizeMode="tail"

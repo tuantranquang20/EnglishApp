@@ -2,8 +2,9 @@ import { Image, StyleSheet, View } from "react-native"
 import React from "react"
 import { Text } from "~app/components"
 import { useStores } from "~app/models"
+import { observer } from "mobx-react-lite"
 
-export function Avatar() {
+export const Avatar = observer(() => {
   const { user } = useStores()
   const { userInformation } = user
 
@@ -14,11 +15,15 @@ export function Avatar() {
         style={styles.img}
         source={require("../../../../assets/images/avt.jpeg")}
       />
-      <Text style={styles.name} preset={"header"} text={userInformation?.displayName} />
-      <Text style={styles.name} preset={"fieldLabel"} text={`Hello, nice to meet you ${userInformation?.displayName}!`} />
+      <Text style={styles.name} preset={"header"} text={userInformation?.username} />
+      <Text
+        style={styles.name}
+        preset={"fieldLabel"}
+        text={`Hello, nice to meet you ${userInformation?.username}!`}
+      />
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   img: {

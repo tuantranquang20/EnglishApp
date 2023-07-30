@@ -10,9 +10,8 @@ import { ToggleStorybook } from "../storybook/toggle-storybook"
 import { ErrorBoundary } from "./screens/error/error-boundary"
 import SplashScreen from "react-native-lottie-splash-screen"
 import "react-native-gesture-handler"
-import messaging from "@react-native-firebase/messaging"
-import { Alert, LogBox } from "react-native"
-LogBox.ignoreAllLogs();
+import { LogBox } from "react-native"
+LogBox.ignoreAllLogs()
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 function App() {
@@ -31,28 +30,6 @@ function App() {
   }, [])
   React.useEffect(() => {
     SplashScreen.hide() // here
-    requestUserPermission()
-  }, [])
-
-  async function requestUserPermission() {
-    const authStatus = await messaging().requestPermission()
-    const token = await messaging().getToken()
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL
-
-    if (enabled) {
-      console.log("Authorization status:", authStatus)
-    }
-  }
-  // eEeSrLxsQvSg1j9waB-rno:APA91bGWPSrq5unsUDdhocZGic7f56nNBfWXAZg3ZVqpdnACDZC6Jo1U1Xh1BU1mY6rS9HquBstf7kuYL7NrEK1KWYt4HMNNz5mZd2HMgC2dzpjQdVwoQ8ar3m52WJprdkwBxNZOZLXD
-  React.useEffect(() => {
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      console.log("remoteMessage", remoteMessage)
-      Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage))
-    })
-
-    return unsubscribe
   }, [])
 
   if (!rootStore || !isNavigationStateRestored) return null

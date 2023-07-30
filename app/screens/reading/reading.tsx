@@ -7,12 +7,11 @@ import { BackCard } from "./components/back-card"
 import { FrontCard } from "./components/front-card"
 import { color } from "~app/theme"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { createReading, getDataFromRealTimeDB } from "~app/services/api/realtime-database"
-import { useNavigation, useRoute } from "@react-navigation/native"
-import { COLLECTION } from "~app/constants/constants"
+import { useRoute } from "@react-navigation/native"
 import { ICardRef } from "./interface"
-import { Button, Progress, Screen, Text } from "~app/components"
+import { Screen } from "~app/components"
 import { Footer } from "./components/footer"
+import { AppApi } from "~app/services/api/app-api"
 
 const { width: screenWidth } = Dimensions.get("window")
 
@@ -40,17 +39,16 @@ export function ReadingScreen() {
     Tts.getInitStatus().then(initTts)
   }, [])
 
-  const testFirebase = useCallback(async () => {
-    // await createReading()
-    const body = {
-      collection: COLLECTION.reading,
-      lesson: params?.key,
-    }
-    await getDataFromRealTimeDB(body, (data) => setDataOfLesson(data))
-  }, [])
+  const getData = useCallback(async () => {
+    const appApi = new AppApi()
+    const grammar = await appApi.getReading(params.id)
 
+    if (grammar?.data?.items?.length) {
+      setDataOfLesson(grammar?.data?.items)
+    }
+  }, [])
   useEffect(() => {
-    testFirebase()
+    getData()
   }, [])
 
   const readText = async (text = "") => {

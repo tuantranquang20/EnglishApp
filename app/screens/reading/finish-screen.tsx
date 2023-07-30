@@ -6,20 +6,33 @@ import { Text } from "~app/components"
 import { color, typography } from "~app/theme"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { StackActions, useNavigation, useRoute } from "@react-navigation/native"
-import xor from "lodash/xor"
+import { useStores } from "~app/models"
+
 const { width } = Dimensions.get("window")
 
 export default function FinishScreen() {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
   const { params } = useRoute()
-  const handleBack = () => {
+  const { finish: finishStore } = useStores()
+  const handleBack = async () => {
+    await finishStore.setFinishStore(!finishStore.flag)
     if (params?.screen === "exercise") {
       navigation.dispatch(StackActions.pop(3))
     } else {
       navigation.dispatch(StackActions.pop(2))
     }
   }
+  const countMatchingElements = (arr1, arr2) => {
+    let count = 0
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] === arr2[i]) {
+        count++
+      }
+    }
+    return count
+  }
+
   return (
     <View style={styles.flex1}>
       <TouchableOpacity style={[styles.back, { marginTop: insets.top + 10 }]} onPress={handleBack}>
@@ -34,9 +47,10 @@ export default function FinishScreen() {
           source={require("../../assets/lotties/success.json")}
         />
         {params?.screen === "exercise" ? (
-          <Text style={styles.finish}>{`Congrats you got ${
-            params?.answer?.length - xor(params?.answer, params?.result)?.length
-          }/${params?.answer?.length} correct`}</Text>
+          <Text style={styles.finish}>{`Congrats you got ${countMatchingElements(
+            params?.answer,
+            params?.result,
+          )}/${params?.answer?.length} correct`}</Text>
         ) : (
           <Text
             style={styles.finish}

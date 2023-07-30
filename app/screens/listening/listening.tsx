@@ -3,22 +3,17 @@ import React, { useCallback, useEffect, useState } from "react"
 import { StyleSheet, View, Animated, Dimensions } from "react-native"
 import { color } from "~app/theme"
 import Footer from "~app/components/doulingo/components/footer"
-import { SelectCell } from "./components/select-cell"
 import { SelectWord } from "./components/select-word"
-import { COLLECTION } from "~app/constants/constants"
-import {
-  createListening,
-  getDataFromRealTimeDB,
-  updateLearningLesson,
-} from "~app/services/api/realtime-database"
 import { scrollTo, useAnimatedRef, useDerivedValue, useSharedValue } from "react-native-reanimated"
-import { Button, Screen } from "~app/components"
+import { Screen } from "~app/components"
 import Tts from "react-native-tts"
 import Toast from "react-native-toast-message"
 import { toastConfig } from "~app/utils/toast"
 import { navigate } from "~app/navigators"
 import { RouteName } from "~app/navigators/constants"
 import { useRoute } from "@react-navigation/native"
+import { AppApi } from "~app/services/api/app-api"
+import { LessonType } from "~app/constants/constants"
 
 const { width: screenWidth } = Dimensions.get("window")
 let answerTrue = 0
@@ -35,11 +30,12 @@ export function ListeningScreen() {
   })
 
   const getAllData = useCallback(async () => {
-    const body = {
-      collection: COLLECTION.listening,
-      lesson: params?.key,
+    const appApi = new AppApi()
+    const listenings = await appApi.getListening(params.id)
+
+    if (listenings?.data?.items?.length) {
+      setDataOfLesson(listenings?.data?.items)
     }
-    await getDataFromRealTimeDB(body, (data) => setDataOfLesson(data))
   }, [])
   useEffect(() => {
     getAllData()
@@ -73,10 +69,6 @@ export function ListeningScreen() {
     readText(word)
     setAnswered(word)
   }
-  const handlePressCell = (word) => {
-    readText(word)
-    setAnswered(word)
-  }
   const handlePressLottie = (answer) => () => {
     readText(answer)
   }
@@ -99,9 +91,6 @@ export function ListeningScreen() {
   }
   const handleSubmitAnswer = () => {
     switch (dataOfLesson[currentIndex]?.type) {
-      case "selectCell":
-        handleCheckAnswer(dataOfLesson[currentIndex]?.rawAnswer === answered)
-        break
       case "selectWord":
         handleCheckAnswer(dataOfLesson[currentIndex]?.answer === answered)
         break
@@ -109,13 +98,18 @@ export function ListeningScreen() {
         break
     }
   }
-  const nextQuestion = () => {
+  const nextQuestion = async () => {
     setCurrentIndex(currentIndex + 1)
     scroll.value = scroll.value + 1
     if (scroll.value >= dataOfLesson.length - 1) {
       const percent = Math.round(100 * (+answerTrue / (dataOfLesson.length || 1)))
       if (params?.percent < percent) {
-        updateLearningLesson({ lesson: params?.key, percent: percent, type: "listening" })
+        const appApi = new AppApi()
+        await appApi.createOrUpdateUserLearning({
+          lessonId: params?.id,
+          percentage: percent,
+          type: LessonType.LISTENING,
+        })
       }
       navigate(RouteName.FinishScreen, {
         answerTrue,
@@ -139,16 +133,6 @@ export function ListeningScreen() {
         >
           {dataOfLesson?.map((el, index) => {
             switch (el.type) {
-              case "selectCell":
-                return (
-                  <SelectCell
-                    handlePressLottie={handlePressLottie(el?.rawAnswer)}
-                    enableHeader={true}
-                    key={`k-${index}`}
-                    handlePressCell={handlePressCell}
-                    data={el}
-                  />
-                )
               case "selectWord":
                 return (
                   <SelectWord

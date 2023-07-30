@@ -8,7 +8,7 @@ import { Avatar } from "./components/avatar"
 import { AppStacks, RouteName } from "~app/navigators/constants"
 import { StackActions, useNavigation } from "@react-navigation/native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import auth from "@react-native-firebase/auth"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const { width } = Dimensions.get("screen")
 
@@ -17,6 +17,7 @@ const feature = [
     icon: require("../../../assets/images/settings.png"),
     title: "Setting",
     speed: 0.5,
+    screen: RouteName.SettingScreen,
   },
   {
     icon: require("../../../assets/images/info.png"),
@@ -37,8 +38,9 @@ export const ProfileScreen = () => {
 
   const onPress = (item) => async () => {
     if (item?.screen === RouteName.LoginScreen) {
-      if (auth().currentUser) {
-        await auth().signOut()
+      const token = await AsyncStorage.getItem("TOKEN")
+      if (token) {
+        await AsyncStorage.removeItem("TOKEN")
       }
       navigation.dispatch(
         StackActions.replace(
@@ -48,14 +50,14 @@ export const ProfileScreen = () => {
           } as never,
         ),
       )
+    } else if (item?.screen === RouteName.SettingScreen) {
+      navigation.navigate(RouteName.SettingScreen)
     }
   }
 
   const onToggleDrawer = () => {
     navigation.openDrawer()
   }
-
-  useEffect(() => {}, [])
 
   const renderItem = ({ item }) => {
     return (

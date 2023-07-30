@@ -13,13 +13,13 @@ import { color } from "~app/theme"
 import { Button, Card, Text, TextField } from "~app/components"
 import { StackActions, useNavigation } from "@react-navigation/native"
 import { AppStacks, RouteName } from "~app/navigators/constants"
-import auth from "@react-native-firebase/auth"
 import { navigate } from "~app/navigators"
 import { useStores } from "~app/models"
 import { isIOS } from "~app/utils/helper"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { AppApi } from "~app/services/api/app-api"
 
-const { width, height } = Dimensions.get("screen")
+const { width } = Dimensions.get("screen")
 
 export const LoginScreen = () => {
   const navigation = useNavigation()
@@ -31,14 +31,16 @@ export const LoginScreen = () => {
     password: "",
   })
 
-  const loginWithFirebase = async () => {
+  const login = async () => {
     try {
-      const response = await auth().signInWithEmailAndPassword(user.email, user.password)
-      if (response && response.user) {
-        const { user } = response
+      const appApi = new AppApi()
+      const response = await appApi.login(user)
+      if (response?.data) {
+        const { data } = response
         await userStore.setUserStore({
-          email: user.email,
-          displayName: user.displayName,
+          email: data.email,
+          username: data.username,
+          _id: data._id,
         })
         navigation.dispatch(
           StackActions.replace(
@@ -55,7 +57,7 @@ export const LoginScreen = () => {
   }
 
   const handlePress = () => {
-    loginWithFirebase()
+    login()
   }
   const goToSignUp = () => {
     navigate(RouteName.RegisterScreen)
@@ -125,6 +127,11 @@ const styles = StyleSheet.create({
     height: 200,
     width: width,
   },
+  intro: {
+    fontSize: 25,
+    marginLeft: 15,
+    position: "absolute",
+  },
   sLabel: {
     backgroundColor: color.palette.white,
     marginLeft: 10,
@@ -141,10 +148,5 @@ const styles = StyleSheet.create({
   textSignUp: {
     color: color.palette.orangeDarker,
     fontSize: 13,
-  },
-  intro: {
-    position: "absolute",
-    fontSize: 25,
-    marginLeft: 15,
   },
 })

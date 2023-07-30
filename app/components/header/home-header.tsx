@@ -1,6 +1,4 @@
 import React from "react"
-import { HeaderProps } from "./header.props"
-
 import { Card } from "../card/card"
 import { Text } from "../text/text"
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native"
@@ -8,9 +6,8 @@ import { color } from "~app/theme"
 import AnimatedLottieView from "lottie-react-native"
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "~app/models"
-import auth from "@react-native-firebase/auth"
 
-export function HomeHeader(props: HeaderProps) {
+export const HomeHeader = () => {
   const navigation = useNavigation()
   const { user } = useStores()
   const onPress = () => {
@@ -20,7 +17,7 @@ export function HomeHeader(props: HeaderProps) {
   return (
     <Card style={styles.container}>
       <View style={styles.row}>
-        {auth().currentUser ? (
+        {!!user?.userInformation?.email ? (
           <TouchableOpacity style={styles.box} onPress={onPress}>
             <AnimatedLottieView
               style={styles.icon}
@@ -39,7 +36,7 @@ export function HomeHeader(props: HeaderProps) {
         />
       </View>
       <View style={styles.footer}>
-        <Text preset="header" text={`Hello ${user?.userInformation?.displayName || "Grey"},`} />
+        <Text preset="header" text={`Hello,`} />
         <Text preset="header">Continue to English!</Text>
       </View>
     </Card>

@@ -4,3 +4,10 @@ export const COLLECTION = {
   grammar: "grammar",
   listening: "listening",
 };
+
+export enum LessonType {
+  GRAMMAR = 'GRAMMAR',
+  LISTENING = 'LISTENING',
+  READING = 'READING',
+}
+

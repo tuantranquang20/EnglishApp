@@ -1,11 +1,10 @@
 /* eslint-disable react/display-name */
 import React from "react"
 import { Image, StyleSheet } from "react-native"
-import { ProfileScreen } from "~app/screens"
-import AnimatedLottieView from "lottie-react-native"
 import { HomeStack } from "./stack/home-stack"
 import { createDrawerNavigator } from "@react-navigation/drawer"
 import { DrawerContent } from "./drawer-content"
+import { ProfileStack } from "./stack/profile-stack"
 
 const Drawer = createDrawerNavigator()
 
@@ -27,7 +26,7 @@ export function BottomTab() {
       />
       <Drawer.Screen
         name={"Profile"}
-        component={ProfileScreen}
+        component={ProfileStack}
         options={{
           headerShown: false,
           drawerIcon: ({ color }) => (

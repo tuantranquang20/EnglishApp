@@ -9,8 +9,8 @@ import { RouteName } from "~app/navigators/constants"
 import Animated, { interpolateNode, Extrapolate, Value } from "react-native-reanimated"
 import { onScrollEvent } from "~app/utils/animated"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { COLLECTION } from "~app/constants/constants"
-import sortBy from "lodash/sortBy"
+import { LessonType } from "~app/constants/constants"
+import { AppApi } from "~app/services/api/app-api"
 
 const { width } = Dimensions.get("window")
 
@@ -19,9 +19,11 @@ export function Lesson() {
   const [lessons, setLessons] = useState([])
   const insets = useSafeAreaInsets()
   const getAllData = useCallback(async () => {
-    await getDataLesson({ collection: COLLECTION.grammar }, (data) =>
-      setLessons(sortBy(data, ["index"])),
-    )
+    const appApi = new AppApi()
+    const lessons = await appApi.getLesson(LessonType.GRAMMAR)
+    if (lessons?.data?.length) {
+      setLessons(lessons?.data)
+    }
   }, [])
 
   useEffect(() => {
@@ -39,9 +41,10 @@ export function Lesson() {
 
   const renderItem = ({ item }) => {
     return (
-      <PressScale onPress={handlePress(item?.key)}>
+      <PressScale onPress={handlePress(item?._id)}>
         <Card style={styles.card}>
-          <Text style={styles.title} text={item?.data?.title} />
+          <Text style={styles.title} text={`${item?.title}: `} />
+          <Text style={styles.title} text={item?.name} />
         </Card>
       </PressScale>
     )

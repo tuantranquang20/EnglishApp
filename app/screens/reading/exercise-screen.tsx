@@ -11,8 +11,8 @@ import Animated, {
 import { isIOS } from "~app/utils/helper"
 import { useNavigation, useRoute } from "@react-navigation/native"
 import { RouteName } from "~app/navigators/constants"
-import { updateLearningLesson } from "~app/services/api/realtime-database"
-import { xor } from "lodash"
+import { LessonType } from "~app/constants/constants"
+import { AppApi } from "~app/services/api/app-api"
 
 const { width } = Dimensions.get("screen")
 const AnimatedText = Animated.createAnimatedComponent(Text)
@@ -25,7 +25,6 @@ export function ExerciseScreen() {
   const navigation = useNavigation()
   const { params } = useRoute()
   const [result, setResult] = useState([])
-
   useDerivedValue(() => {
     scrollTo(aref, scroll.value * width, 0, true)
   })
@@ -60,14 +59,28 @@ export function ExerciseScreen() {
       return [el, answerRandom1, answerRandom2]
     })
   }, [])
-
-  const nextQuestion = (word) => {
-    const percent = Math.round(
-      (100 * (answer?.length - xor(answer, [...result, word])?.length)) / (answer?.length || 1),
-    )
+  const countMatchingElements = (arr1, arr2) => {
+    let count = 0
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] === arr2[i]) {
+        count++
+      }
+    }
+    return count
+  }
+  const nextQuestion = async (word) => {
     if (currentIndex === params?.data?.length - 1) {
+      const percent = Math.round(
+        (100 * countMatchingElements(answer, [...result, word])) / (answer?.length || 1),
+      )
+
       if (+params?.params?.percent < +percent) {
-        updateLearningLesson({ lesson: params?.params?.key, percent: percent, type: "reading" })
+        const appApi = new AppApi()
+        await appApi.createOrUpdateUserLearning({
+          lessonId: params?.params?.id,
+          percentage: percent,
+          type: LessonType.READING,
+        })
       }
       return navigation.navigate(RouteName.FinishScreen, {
         result: [...result, word],
