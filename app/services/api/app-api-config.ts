@@ -1,4 +1,4 @@
-const API_URL = "http://192.168.35.196:3000"
+const API_URL = "http://192.168.10.173:3000"
 
 export interface AppApiConfig {
   url: string

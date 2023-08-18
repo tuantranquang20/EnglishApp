@@ -86,11 +86,12 @@ export class AppApi {
   async getLesson(type: LessonType) {
     try {
       const response = await this.apisauce.get(`${this.config.url}/lesson?type=${type}`)
+
       if (!response.ok) {
         const problem = getGeneralApiProblem(response)
         if (problem) return problem
       }
-      return { kind: "ok", ...response?.data }
+      return { kind: "ok", ...response?.data?.data }
     } catch (e) {
       return { kind: "bad-data" }
     }
@@ -178,6 +179,24 @@ export class AppApi {
   async updateUser(id, body) {
     try {
       const response = await this.apisauce.patch(`${this.config.url}/user/${id}`, body)
+      if (!response.ok) {
+        const problem = getGeneralApiProblem(response)
+        if (problem)
+          return {
+            ...problem,
+            message: response.data?.errors?.[0]?.message || "Something went wrong!",
+          }
+      }
+
+      return { kind: "ok", ...response?.data }
+    } catch (e) {
+      return { kind: "bad-data" }
+    }
+  }
+  
+  async createUserHistory(data) {
+    try {
+      const response = await this.apisauce.post(`${this.config.url}/user-history`, data)
       if (!response.ok) {
         const problem = getGeneralApiProblem(response)
         if (problem)

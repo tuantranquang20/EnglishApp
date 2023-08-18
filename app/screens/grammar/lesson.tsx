@@ -9,8 +9,9 @@ import { RouteName } from "~app/navigators/constants"
 import Animated, { interpolateNode, Extrapolate, Value } from "react-native-reanimated"
 import { onScrollEvent } from "~app/utils/animated"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { LessonType } from "~app/constants/constants"
+import { LessonType, UserHistoryType } from "~app/constants/constants"
 import { AppApi } from "~app/services/api/app-api"
+import { useStores } from "~app/models"
 
 const { width } = Dimensions.get("window")
 
@@ -18,6 +19,8 @@ export function Lesson() {
   const y = React.useRef(new Value<number>(0)).current
   const [lessons, setLessons] = useState([])
   const insets = useSafeAreaInsets()
+  const { user: userStore } = useStores()
+
   const getAllData = useCallback(async () => {
     const appApi = new AppApi()
     const lessons = await appApi.getLesson(LessonType.GRAMMAR)
@@ -35,13 +38,21 @@ export function Lesson() {
     outputRange: [1, 0],
     extrapolateRight: Extrapolate.CLAMP,
   })
-  const handlePress = (key) => () => {
+  const handlePress = (key, value) => async () => {
+    if (userStore?.userInformation?._id) {
+      const appApi = new AppApi()
+      await appApi.createUserHistory({
+        type: UserHistoryType.GRAMMAR,
+        userId: userStore.userInformation._id,
+        value,
+      })
+    }
     navigate(RouteName.GrammarScreen, key)
   }
 
   const renderItem = ({ item }) => {
     return (
-      <PressScale onPress={handlePress(item?._id)}>
+      <PressScale onPress={handlePress(item?._id, `${item?.title}: ${item?.name}`)}>
         <Card style={styles.card}>
           <Text style={styles.title} text={`${item?.title}: `} />
           <Text style={styles.title} text={item?.name} />

@@ -8,7 +8,7 @@ import { RouteName } from "~app/navigators/constants"
 import Animated, { interpolateNode, Extrapolate, Value } from "react-native-reanimated"
 import { onScrollEvent } from "~app/utils/animated"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { LessonType } from "~app/constants/constants"
+import { LessonType, UserHistoryType } from "~app/constants/constants"
 import { AppApi } from "~app/services/api/app-api"
 import { useStores } from "~app/models"
 import { observer } from "mobx-react-lite"
@@ -19,7 +19,7 @@ export const Lesson = observer(() => {
   const y = React.useRef(new Value<number>(0)).current
   const [lessons, setLessons] = useState([])
   const insets = useSafeAreaInsets()
-  const { finish: finishStore } = useStores()
+  const { finish: finishStore, user: userStore } = useStores()
 
   const getAllData = useCallback(async () => {
     const appApi = new AppApi()
@@ -38,13 +38,23 @@ export const Lesson = observer(() => {
     outputRange: [1, 0],
     extrapolateRight: Extrapolate.CLAMP,
   })
-  const handlePress = (id, percent) => () => {
-    navigate(RouteName.ListeningScreen, { id, percent })
+  const handlePress = (id, percent, value) => async () => {
+    if (userStore?.userInformation?._id) {
+      const appApi = new AppApi()
+      await appApi.createUserHistory({
+        type: UserHistoryType.LISTENING,
+        userId: userStore.userInformation._id,
+        value,
+      })
+    }
+    navigate(RouteName.ListeningScreen, { id, percent, value })
   }
 
   const renderItem = ({ item }) => {
     return (
-      <PressScale onPress={handlePress(item?._id, item?.percentage)}>
+      <PressScale
+        onPress={handlePress(item?._id, item?.percentage, `${item?.title}: ${item?.name}`)}
+      >
         <Card style={styles.card}>
           <Text style={styles.title} text={`${item?.title}: ${item?.name}`} />
           <PercentageCircle

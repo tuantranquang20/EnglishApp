@@ -18,6 +18,8 @@ import { useStores } from "~app/models"
 import { isIOS } from "~app/utils/helper"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { AppApi } from "~app/services/api/app-api"
+import { UserHistoryType } from "~app/constants/constants"
+import moment from "moment"
 
 const { width } = Dimensions.get("screen")
 
@@ -35,12 +37,18 @@ export const LoginScreen = () => {
     try {
       const appApi = new AppApi()
       const response = await appApi.login(user)
+
       if (response?.data) {
         const { data } = response
         await userStore.setUserStore({
           email: data.email,
           username: data.username,
           _id: data._id,
+        })
+        await appApi.createUserHistory({
+          type: UserHistoryType.LOGIN,
+          userId: data._id,
+          value: moment().format("YYYY-MM-DD HH:mm:ss"),
         })
         navigation.dispatch(
           StackActions.replace(

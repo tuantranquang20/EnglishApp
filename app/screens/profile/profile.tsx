@@ -9,6 +9,10 @@ import { AppStacks, RouteName } from "~app/navigators/constants"
 import { StackActions, useNavigation } from "@react-navigation/native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { AppApi } from "~app/services/api/app-api"
+import { UserHistoryType } from "~app/constants/constants"
+import moment from "moment"
+import { useStores } from "~app/models"
 
 const { width } = Dimensions.get("screen")
 
@@ -35,9 +39,18 @@ const feature = [
 export const ProfileScreen = () => {
   const navigation = useNavigation()
   const insets = useSafeAreaInsets()
+  const { user: userStore } = useStores()
 
   const onPress = (item) => async () => {
     if (item?.screen === RouteName.LoginScreen) {
+      const appApi = new AppApi()
+      if (userStore?.userInformation?._id) {
+        await appApi.createUserHistory({
+          type: UserHistoryType.LOGOUT,
+          userId: userStore.userInformation._id,
+          value: moment().format("YYYY-MM-DD HH:mm:ss"),
+        })
+      }
       const token = await AsyncStorage.getItem("TOKEN")
       if (token) {
         await AsyncStorage.removeItem("TOKEN")

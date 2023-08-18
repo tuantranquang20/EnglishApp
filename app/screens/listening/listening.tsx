@@ -13,7 +13,8 @@ import { navigate } from "~app/navigators"
 import { RouteName } from "~app/navigators/constants"
 import { useRoute } from "@react-navigation/native"
 import { AppApi } from "~app/services/api/app-api"
-import { LessonType } from "~app/constants/constants"
+import { LessonType, UserHistoryType } from "~app/constants/constants"
+import { useStores } from "~app/models"
 
 const { width: screenWidth } = Dimensions.get("window")
 let answerTrue = 0
@@ -24,6 +25,7 @@ export function ListeningScreen() {
   const { params } = useRoute()
   const aref = useAnimatedRef()
   const scroll = useSharedValue(0)
+  const { user: userStore } = useStores()
 
   useDerivedValue(() => {
     scrollTo(aref, scroll.value * screenWidth, 0, true)
@@ -109,6 +111,14 @@ export function ListeningScreen() {
           lessonId: params?.id,
           percentage: percent,
           type: LessonType.LISTENING,
+        })
+      }
+      if (userStore?.userInformation?._id) {
+        const appApi = new AppApi()
+        await appApi.createUserHistory({
+          type: UserHistoryType.EXAM,
+          userId: userStore.userInformation._id,
+          value: `Listening - ${params?.value}`,
         })
       }
       navigate(RouteName.FinishScreen, {

@@ -11,8 +11,9 @@ import Animated, {
 import { isIOS } from "~app/utils/helper"
 import { useNavigation, useRoute } from "@react-navigation/native"
 import { RouteName } from "~app/navigators/constants"
-import { LessonType } from "~app/constants/constants"
+import { LessonType, UserHistoryType } from "~app/constants/constants"
 import { AppApi } from "~app/services/api/app-api"
+import { useStores } from "~app/models"
 
 const { width } = Dimensions.get("screen")
 const AnimatedText = Animated.createAnimatedComponent(Text)
@@ -25,6 +26,8 @@ export function ExerciseScreen() {
   const navigation = useNavigation()
   const { params } = useRoute()
   const [result, setResult] = useState([])
+  const { user: userStore } = useStores()
+
   useDerivedValue(() => {
     scrollTo(aref, scroll.value * width, 0, true)
   })
@@ -80,6 +83,14 @@ export function ExerciseScreen() {
           lessonId: params?.params?.id,
           percentage: percent,
           type: LessonType.READING,
+        })
+      }
+      if (userStore?.userInformation?._id) {
+        const appApi = new AppApi()
+        await appApi.createUserHistory({
+          type: UserHistoryType.EXAM,
+          userId: userStore.userInformation._id,
+          value: `Reading - ${params?.params?.value}`,
         })
       }
       return navigation.navigate(RouteName.FinishScreen, {
